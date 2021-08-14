@@ -29,7 +29,7 @@
 <meta property="og:description" content="Java并发的书籍断断续续的看了三本：Java并发编程之美，实战Java高并发程序设计，深入浅出Java多线程。看关于线程、进程、volatile、synchronized这些知识点的时候还是觉得非常容易理解的，但是每次看到Atomic、Future、Executor等这些J.U.C工具类就看不明白了，所以就想弄一个框架梳理一下高并发到底在做什么。本文结合Java并发实现原理：JDK源码剖析和深入">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2021-08-12T03:03:21.000Z">
-<meta property="article:modified_time" content="2021-08-12T03:33:52.403Z">
+<meta property="article:modified_time" content="2021-08-14T02:36:09.516Z">
 <meta property="article:author" content="Kevin Wang">
 <meta property="article:tag" content="Java并发">
 <meta name="twitter:card" content="summary">
@@ -179,10 +179,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2021-08-12 11:03:21 / 修改时间：11:33:52" itemprop="dateCreated datePublished" datetime="2021-08-12T11:03:21+08:00">2021-08-12</time>
+              <time title="创建时间：2021-08-12 11:03:21" itemprop="dateCreated datePublished" datetime="2021-08-12T11:03:21+08:00">2021-08-12</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-08-14 10:36:09" itemprop="dateModified" datetime="2021-08-14T10:36:09+08:00">2021-08-14</time>
+              </span>
 
           
             <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
@@ -202,11 +208,91 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>Java并发的书籍断断续续的看了三本：Java并发编程之美，实战Java高并发程序设计，深入浅出Java多线程。看关于线程、进程、volatile、synchronized这些知识点的时候还是觉得非常容易理解的，但是每次看到Atomic、Future、Executor等这些J.U.C工具类就看不明白了，所以就想弄一个框架梳理一下高并发到底在做什么。本文结合Java并发实现原理：JDK源码剖析和深入浅出Java多线程来进行总结。</p>
+        <p>Java并发的书籍断断续续的看了三本：Java并发编程之美，实战Java高并发程序设计，深入浅出Java多线程。看关于线程、进程、volatile、synchronized这些知识点的时候还是觉得非常容易理解的，但是每次看到Atomic、Future、Executor等这些J.U.C工具类就看不明白了，所以就想弄一个框架梳理一下高并发到底在做什么。本文结合<strong>Java并发实现原理：JDK源码剖析</strong>和<strong>深入浅出Java多线程</strong>来进行总结。</p>
 <span id="more"></span>
 
-<p>分为三部分：<strong>线程相关内容</strong>、<strong>并发基础</strong>（关键字、CAS、AQS）、<strong>并发过程中使用的工具类</strong>。</p>
-<h3 id="一、线程基础"><a href="#一、线程基础" class="headerlink" title="一、线程基础"></a>一、线程基础</h3><h3 id="二、并发基础"><a href="#二、并发基础" class="headerlink" title="二、并发基础"></a>二、并发基础</h3><h3 id="三、并发高级"><a href="#三、并发高级" class="headerlink" title="三、并发高级"></a>三、并发高级</h3>
+<p>分为两部分：<strong>并发基础</strong>（关键字、CAS、AQS）、<strong>并发过程中使用的工具类</strong>。</p>
+<h3 id="一、并发基础"><a href="#一、并发基础" class="headerlink" title="一、并发基础"></a>一、并发基础</h3><h4 id="1-Thread类和Runnable接口"><a href="#1-Thread类和Runnable接口" class="headerlink" title="1.Thread类和Runnable接口"></a>1.Thread类和Runnable接口</h4><h5 id="1-1简介"><a href="#1-1简介" class="headerlink" title="1.1简介"></a>1.1简介</h5><ul>
+<li>继承<code>Thread</code>类，并重写<code>run</code>方法；</li>
+<li>实现<code>Runnable</code>接口的<code>run</code>方法；（主要）</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Demo</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">MyThread</span> <span class="keyword">extends</span> <span class="title">Thread</span> </span>&#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;MyThread&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Thread myThread = <span class="keyword">new</span> MyThread();</span><br><span class="line">        myThread.start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Demo</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">MyThread</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;MyThread&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">new</span> Thread(<span class="keyword">new</span> MyThread()).start();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Java 8 函数式编程，可以省略MyThread类</span></span><br><span class="line">        <span class="keyword">new</span> Thread(() -&gt; &#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;Java 8 匿名内部类&quot;</span>);</span><br><span class="line">        &#125;).start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Thread类的几个常用的方法：</p>
+<ul>
+<li>currentThread()：静态方法，返回对当前正在执行的线程对象的引用；</li>
+<li>start()：开始执行线程的方法，java虚拟机会调用线程内的run()方法；</li>
+<li>yield()：yield在英语里有放弃的意思，同样，这里的yield()指的是当前线程愿意让出对当前处理器的占用。这里需要注意的是，就算当前线程调用了yield()方法，程序在调度的时候，也还有可能继续运行这个线程的；</li>
+<li>sleep()：静态方法，使当前线程睡眠一段时间；</li>
+<li>join()：使当前线程等待另一个线程执行完毕之后再继续执行，内部调用的是Object类的wait方法实现的；</li>
+</ul>
+<h5 id="1-2、Callable、Future优化接口"><a href="#1-2、Callable、Future优化接口" class="headerlink" title="1.2、Callable、Future优化接口"></a>1.2、Callable、Future优化接口</h5><p>通常来说，我们使用<code>Runnable</code>和<code>Thread</code>来创建一个新的线程。但是它们有一个弊端，就是<code>run</code>方法是没有返回值的。而有时候我们希望开启一个线程去执行一个任务，并且这个任务执行完成后有一个返回值。JDK提供了<code>Callable</code>接口与<code>Future</code>接口为我们解决这个问题，这也是所谓的“异步”模型。</p>
+<p><code>Callable</code>与<code>Runnable</code>类似，同样是只有一个抽象方法的函数式接口。不同的是，<code>Callable</code>提供的方法是<strong>有返回值</strong>的，而且支持<strong>泛型</strong>。</p>
+<p><code>Callable</code>一般是配合线程池工具<code>ExecutorService</code>来使用的。我们会在后续章节解释线程池的使用。这里只介绍<code>ExecutorService</code>可以使用<code>submit</code>方法来让一个<code>Callable</code>接口执行。它会返回一个<code>Future</code>，我们后续的程序可以通过这个<code>Future</code>的<code>get</code>方法得到结果。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 自定义Callable</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Task</span> <span class="keyword">implements</span> <span class="title">Callable</span>&lt;<span class="title">Integer</span>&gt;</span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Integer <span class="title">call</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="comment">// 模拟计算需要一秒</span></span><br><span class="line">        Thread.sleep(<span class="number">1000</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">2</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String args[])</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="comment">// 使用</span></span><br><span class="line">        ExecutorService executor = Executors.newCachedThreadPool();</span><br><span class="line">        Task task = <span class="keyword">new</span> Task();</span><br><span class="line">        Future&lt;Integer&gt; result = executor.submit(task);</span><br><span class="line">        <span class="comment">// 注意调用get方法会阻塞当前线程，直到得到结果。</span></span><br><span class="line">        <span class="comment">// 所以实际编码中建议使用可以设置超时时间的重载get方法。</span></span><br><span class="line">        System.out.println(result.get()); </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>Future</code>接口只有几个比较简单的方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">interface</span> <span class="title">Future</span>&lt;<span class="title">V</span>&gt; </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">boolean</span> <span class="title">cancel</span><span class="params">(<span class="keyword">boolean</span> paramBoolean)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">boolean</span> <span class="title">isCancelled</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">boolean</span> <span class="title">isDone</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> V <span class="title">get</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException, ExecutionException</span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> V <span class="title">get</span><span class="params">(<span class="keyword">long</span> paramLong, TimeUnit paramTimeUnit)</span></span></span><br><span class="line"><span class="function">            <span class="keyword">throws</span> InterruptedException, ExecutionException, TimeoutException</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>为了让任务有能够取消的功能，就使用<code>Callable</code>来代替<code>Runnable</code>。如果为了可取消性而使用 <code>Future</code>但又不提供可用的结果，则可以声明 <code>Future&lt;?&gt;</code>形式类型、并返回 <code>null</code>作为底层任务的结果</p>
+<p><code>Future</code>接口。这个接口有一个实现类叫<code>FutureTask</code>。<code>FutureTask</code>是实现的<code>RunnableFuture</code>接口的，而<code>RunnableFuture</code>接口同时继承了<code>Runnable</code>接口和<code>Future</code>接口：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">RunnableFuture</span>&lt;<span class="title">V</span>&gt; <span class="keyword">extends</span> <span class="title">Runnable</span>, <span class="title">Future</span>&lt;<span class="title">V</span>&gt; </span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Sets this Future to the result of its computation</span></span><br><span class="line"><span class="comment">     * unless it has been cancelled.</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>Future</code>只是一个接口，而它里面的<code>cancel</code>，<code>get</code>，<code>isDone</code>等方法要自己实现起来都是<strong>非常复杂</strong>的。所以JDK提供了一个<code>FutureTask</code>类来供我们使用。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 自定义Callable，与上面一样</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Task</span> <span class="keyword">implements</span> <span class="title">Callable</span>&lt;<span class="title">Integer</span>&gt;</span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Integer <span class="title">call</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="comment">// 模拟计算需要一秒</span></span><br><span class="line">        Thread.sleep(<span class="number">1000</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">2</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String args[])</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="comment">// 使用</span></span><br><span class="line">        ExecutorService executor = Executors.newCachedThreadPool();</span><br><span class="line">        FutureTask&lt;Integer&gt; futureTask = <span class="keyword">new</span> FutureTask&lt;&gt;(<span class="keyword">new</span> Task());</span><br><span class="line">        executor.submit(futureTask);</span><br><span class="line">        System.out.println(futureTask.get());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里是使用<code>FutureTask</code>直接取<code>get</code>取值，而上面的Demo是通过<code>submit</code>方法返回的<code>Future</code>去取值。</p>
+<h4 id="2、JMM与happen-before"><a href="#2、JMM与happen-before" class="headerlink" title="2、JMM与happen-before"></a>2、JMM与happen-before</h4><h5 id="2-1、JMM"><a href="#2-1、JMM" class="headerlink" title="2.1、JMM"></a>2.1、JMM</h5><p><strong>在Java中，使用的是共享内存并发模型</strong>。</p>
+<p>在栈中的变量（局部变量、方法定义参数、异常处理器参数）不会在线程之间共享，也就不会有内存可见性（下文会说到）的问题，也不受内存模型的影响。而在堆中的变量是共享的，本文称为共享变量。</p>
+<ol>
+<li>所有的共享变量都存在主内存中。</li>
+<li>每个线程都保存了一份该线程使用到的共享变量的副本。</li>
+<li>如果线程A与线程B之间要通信的话，必须经历下面2个步骤：<ol>
+<li>线程A将本地内存A中更新过的共享变量刷新到主内存中去。</li>
+<li>线程B到主内存中去读取线程A之前已经更新过的共享变量。</li>
+</ol>
+</li>
+</ol>
+<p><strong>所以，线程A无法直接访问线程B的工作内存，线程间通信必须经过主内存。</strong></p>
+<p>注意，根据JMM的规定，<strong>线程对共享变量的所有操作都必须在自己的本地内存中进行，不能直接从主内存中读取</strong>。</p>
+<p>所以线程B并不是直接去主内存中读取共享变量的值，而是先在本地内存B中找到这个共享变量，发现这个共享变量已经被更新了，然后本地内存B去主内存中读取这个共享变量的新值，并拷贝到本地内存B中，最后线程B再读取本地内存B中的新值。</p>
+<h5 id="2-2、指令重排"><a href="#2-2、指令重排" class="headerlink" title="2.2、指令重排"></a>2.2、指令重排</h5><p>指令重排一般分为以下三种：</p>
+<ul>
+<li><p><strong>编译器优化重排</strong></p>
+<p>编译器在<strong>不改变单线程程序语义</strong>的前提下，可以重新安排语句的执行顺序。</p>
+</li>
+<li><p><strong>指令并行重排</strong></p>
+<p>现代处理器采用了指令级并行技术来将多条指令重叠执行。如果<strong>不存在数据依赖性</strong>(即后一个执行的语句无需依赖前面执行的语句的结果)，处理器可以改变语句对应的机器指令的执行顺序。</p>
+</li>
+<li><p><strong>内存系统重排</strong></p>
+<p>由于处理器使用缓存和读写缓存冲区，这使得加载(load)和存储(store)操作看上去可能是在乱序执行，因为三级缓存的存在，导致内存与缓存的数据同步存在时间差。</p>
+</li>
+</ul>
+<p>第三类就是造成“内存可见性”问题的主因</p>
+<h5 id="2-3-happen-before"><a href="#2-3-happen-before" class="headerlink" title="2.3 happen-before"></a>2.3 happen-before</h5><p>happens-before关系的定义如下：</p>
+<ol>
+<li>如果一个操作happens-before另一个操作，那么第一个操作的执行结果将对第二个操作可见，而且第一个操作的执行顺序排在第二个操作之前。</li>
+<li><strong>两个操作之间存在happens-before关系，并不意味着Java平台的具体实现必须要按照happens-before关系指定的顺序来执行。如果重排序之后的执行结果，与按happens-before关系来执行的结果一致，那么JMM也允许这样的重排序。</strong></li>
+</ol>
+<p>总之，<strong>如果操作A happens-before操作B，那么操作A在内存上所做的操作对操作B都是可见的，不管它们在不在一个线程。</strong></p>
+<p>在Java中，有以下天然的happens-before关系：</p>
+<ul>
+<li>程序顺序规则：一个线程中的每一个操作，happens-before于该线程中的任意后续操作。</li>
+<li>监视器锁规则：对一个锁的解锁，happens-before于随后对这个锁的加锁。</li>
+<li>volatile变量规则：对一个volatile域的写，happens-before于任意后续对这个volatile域的读。</li>
+<li>传递性：如果A happens-before B，且B happens-before C，那么A happens-before C。</li>
+<li>start规则：如果线程A执行操作ThreadB.start()启动线程B，那么A线程的ThreadB.start（）操作happens-before于线程B中的任意操作</li>
+<li>join规则：如果线程A执行操作ThreadB.join（）并成功返回，那么线程B中的任意操作happens-before于线程A从ThreadB.join()操作成功返回。</li>
+</ul>
+<h4 id="3、volatile"><a href="#3、volatile" class="headerlink" title="3、volatile"></a>3、volatile</h4><p>volatile的三重功效：64位写入的原子性、内存可见性和禁止重排序</p>
+<p>在理论层面，可以把基本的CPU内存屏障分成四种：（1）LoadLoad：禁止读和读的重排序。（2）StoreStore：禁止写和写的重排序。（3）LoadStore：禁止读和写的重排序。（4）StoreLoad：禁止写和读的重排序。</p>
+<p>实现volatile关键字的语义的一种参考做法：</p>
+<p>（1）在volatile写操作的前面插入一个StoreStore屏障。保证volatile写操作不会和之前的写操作重排序。</p>
+<p>（2）在volatile写操作的后面插入一个StoreLoad屏障。保证volatile写操作不会和之后的读操作重排序。</p>
+<p>（3）在volatile读操作的后面插入一个LoadLoad屏障+LoadStore屏障。保证volatile读操作不会和之后的读操作、写操作重排序</p>
+<h4 id="4、Synchronized"><a href="#4、Synchronized" class="headerlink" title="4、Synchronized"></a>4、Synchronized</h4><h3 id="二、并发高级"><a href="#二、并发高级" class="headerlink" title="二、并发高级"></a>二、并发高级</h3>
     </div>
 
     
@@ -286,7 +372,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E7%BA%BF%E7%A8%8B%E5%9F%BA%E7%A1%80"><span class="nav-number">1.</span> <span class="nav-text">一、线程基础</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E5%B9%B6%E5%8F%91%E5%9F%BA%E7%A1%80"><span class="nav-number">2.</span> <span class="nav-text">二、并发基础</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E5%B9%B6%E5%8F%91%E9%AB%98%E7%BA%A7"><span class="nav-number">3.</span> <span class="nav-text">三、并发高级</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%B9%B6%E5%8F%91%E5%9F%BA%E7%A1%80"><span class="nav-number">1.</span> <span class="nav-text">一、并发基础</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-Thread%E7%B1%BB%E5%92%8CRunnable%E6%8E%A5%E5%8F%A3"><span class="nav-number">1.1.</span> <span class="nav-text">1.Thread类和Runnable接口</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-1%E7%AE%80%E4%BB%8B"><span class="nav-number">1.1.1.</span> <span class="nav-text">1.1简介</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-2%E3%80%81Callable%E3%80%81Future%E4%BC%98%E5%8C%96%E6%8E%A5%E5%8F%A3"><span class="nav-number">1.1.2.</span> <span class="nav-text">1.2、Callable、Future优化接口</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2%E3%80%81JMM%E4%B8%8Ehappen-before"><span class="nav-number">1.2.</span> <span class="nav-text">2、JMM与happen-before</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#2-1%E3%80%81JMM"><span class="nav-number">1.2.1.</span> <span class="nav-text">2.1、JMM</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-2%E3%80%81%E6%8C%87%E4%BB%A4%E9%87%8D%E6%8E%92"><span class="nav-number">1.2.2.</span> <span class="nav-text">2.2、指令重排</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-3-happen-before"><span class="nav-number">1.2.3.</span> <span class="nav-text">2.3 happen-before</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3%E3%80%81volatile"><span class="nav-number">1.3.</span> <span class="nav-text">3、volatile</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4%E3%80%81Synchronized"><span class="nav-number">1.4.</span> <span class="nav-text">4、Synchronized</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E5%B9%B6%E5%8F%91%E9%AB%98%E7%BA%A7"><span class="nav-number">2.</span> <span class="nav-text">二、并发高级</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
