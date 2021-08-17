@@ -30,7 +30,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/2021/08/12/Java%E5%B9%B6%E5%8F%91%E6%A1%86%E6%9E%B6/AtomicAllClass.png">
 <meta property="article:published_time" content="2021-08-12T03:03:21.000Z">
-<meta property="article:modified_time" content="2021-08-17T00:56:29.335Z">
+<meta property="article:modified_time" content="2021-08-17T05:00:07.295Z">
 <meta property="article:author" content="Kevin Wang">
 <meta property="article:tag" content="Java并发">
 <meta name="twitter:card" content="summary">
@@ -189,7 +189,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-08-17 08:56:29" itemprop="dateModified" datetime="2021-08-17T08:56:29+08:00">2021-08-17</time>
+                <time title="修改时间：2021-08-17 13:00:07" itemprop="dateModified" datetime="2021-08-17T13:00:07+08:00">2021-08-17</time>
               </span>
 
           
@@ -492,10 +492,10 @@
 <p>这三种叫做均是原子操作，其中compareAndSetState的实现依赖于Unsafe的compareAndSwapInt()方法。</p>
 <h4 id="锁与条件"><a href="#锁与条件" class="headerlink" title="锁与条件"></a>锁与条件</h4><p>因为在Concurrent包中的锁都是“可重入锁”，所以一般都命名为ReentrantX，因为所有的锁。“可重入锁”是指当一个线程调用object.lock（）拿到锁，进入互斥区后，再次调用object.lock（），仍然可以拿到该锁。很显然，通常的锁都要设计成可重入的，否则就会发生死锁。</p>
 <p>synchronized用的锁和ReentrantLock，其实都是“排它锁”。也就是说，这些锁在同一时刻只允许一个线程进行访问。</p>
-<p><strong>ReentrantLock</strong>内部有两个非抽象类<code>NonfairSync</code>和<code>FairSync</code>，它们都继承了Sync。从名字上看得出，分别是”非公平同步器“和”公平同步器“的意思。通过看这两个同步器的源码可以发现，它们的实现都是”独占“的。都调用了AOS的<code>setExclusiveOwnerThread</code>方法，所以ReentrantLock的锁是”独占“的，也就是说，它的锁都是”排他锁“，不能共享。</p>
-<p><strong>ReentrantReadWriteLock</strong>实现了读写锁，但它有一个小弊端，就是在“写”操作的时候，其它线程不能写也不能读。我们称这种现象为“写饥饿”。读线程和读线程之间不互斥（可以同时拿到这把锁），读线程和写线程互斥，写线程和写线程也互斥。</p>
-<p><strong>Condition</strong>本身也是一个接口，其功能和wait/notify类似，必须和Lock一起使用。</p>
-<p><strong>StampedLock</strong>的核心思想在于，<strong>在读的时候如果发生了写，应该通过重试的方式来获取新的值，而不应该阻塞写操作。这种模式也就是典型的无锁编程思想，和CAS自旋的思想一样</strong>。这种操作方式决定了StampedLock在读线程非常多而写线程非常少的场景下非常适用，同时还避免了写饥饿情况的发生。</p>
+<h5 id="ReentrantLock"><a href="#ReentrantLock" class="headerlink" title="ReentrantLock"></a>ReentrantLock</h5><p><strong>ReentrantLock</strong>内部有两个非抽象类<code>NonfairSync</code>和<code>FairSync</code>，它们都继承了Sync。从名字上看得出，分别是”非公平同步器“和”公平同步器“的意思。通过看这两个同步器的源码可以发现，它们的实现都是”独占“的。都调用了AOS的<code>setExclusiveOwnerThread</code>方法，所以ReentrantLock的锁是”独占“的，也就是说，它的锁都是”排他锁“，不能共享。</p>
+<h5 id="ReentrantReadWriteLock"><a href="#ReentrantReadWriteLock" class="headerlink" title="ReentrantReadWriteLock"></a>ReentrantReadWriteLock</h5><p><strong>ReentrantReadWriteLock</strong>实现了读写锁，但它有一个小弊端，就是在“写”操作的时候，其它线程不能写也不能读。我们称这种现象为“写饥饿”。读线程和读线程之间不互斥（可以同时拿到这把锁），读线程和写线程互斥，写线程和写线程也互斥。</p>
+<h5 id="Condition"><a href="#Condition" class="headerlink" title="Condition"></a>Condition</h5><p><strong>Condition</strong>本身也是一个接口，其功能和wait/notify类似，必须和Lock一起使用。</p>
+<h5 id="StampedLock"><a href="#StampedLock" class="headerlink" title="StampedLock"></a>StampedLock</h5><p><strong>StampedLock</strong>的核心思想在于，<strong>在读的时候如果发生了写，应该通过重试的方式来获取新的值，而不应该阻塞写操作。这种模式也就是典型的无锁编程思想，和CAS自旋的思想一样</strong>。这种操作方式决定了StampedLock在读线程非常多而写线程非常少的场景下非常适用，同时还避免了写饥饿情况的发生。</p>
 <h4 id="同步工具"><a href="#同步工具" class="headerlink" title="同步工具"></a>同步工具</h4><table>
 <thead>
 <tr>
@@ -524,20 +524,88 @@
 <td>增强的CyclicBarrier</td>
 </tr>
 </tbody></table>
-<p><strong>Semaphore</strong>翻译过来是信号的意思。顾名思义，这个工具类提供的功能就是多个线程彼此“打信号”。而这个“信号”是一个<code>int</code>类型的数据，也可以看成是一种“资源”。</p>
+<h5 id="Semaphore"><a href="#Semaphore" class="headerlink" title="Semaphore"></a>Semaphore</h5><p><strong>Semaphore</strong>翻译过来是信号的意思。顾名思义，这个工具类提供的功能就是多个线程彼此“打信号”。而这个“信号”是一个<code>int</code>类型的数据，也可以看成是一种“资源”。</p>
 <p>可以在构造函数中传入初始资源总数，以及是否使用“公平”的同步器。默认情况下，是非公平的。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 默认情况下使用非公平</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">Semaphore</span><span class="params">(<span class="keyword">int</span> permits)</span> </span>&#123;</span><br><span class="line">    sync = <span class="keyword">new</span> NonfairSync(permits);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">Semaphore</span><span class="params">(<span class="keyword">int</span> permits, <span class="keyword">boolean</span> fair)</span> </span>&#123;</span><br><span class="line">    sync = fair ? <span class="keyword">new</span> FairSync(permits) : <span class="keyword">new</span> NonfairSync(permits);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>acquire()方法会申请一个permit，而release方法会释放一个permit。当然，你也可以申请多个acquire(int permits)或者释放多个release(int permits)。</p>
 <p>每次acquire，permits就会减少一个或者多个。如果减少到了0，再有其他线程来acquire，那就要阻塞这个线程直到有其它线程release permit为止。</p>
 <p>当初始的资源个数为1的时候，Semaphore退化为排他锁。</p>
-<p><strong>Exchanger</strong>类用于两个线程交换数据。它支持泛型，也就是说你可以在两个线程之间传送任何数据，当一个线程调用exchange方法后，它是处于阻塞状态的，只有当另一个线程也调用了exchange方法，它才会继续向下执行。</p>
+<h5 id="Exchanger"><a href="#Exchanger" class="headerlink" title="Exchanger"></a>Exchanger</h5><p><strong>Exchanger</strong>类用于两个线程交换数据。它支持泛型，也就是说你可以在两个线程之间传送任何数据，当一个线程调用exchange方法后，它是处于阻塞状态的，只有当另一个线程也调用了exchange方法，它才会继续向下执行。</p>
 <p>Exchanger一般用于两个线程之间更方便地在内存中交换数据，因为其支持泛型，所以我们可以传输任何的数据，比如IO流或者IO缓存。Exchanger只能是两个线程交换数据吗？那三个调用同一个实例的exchange方法会发生什么呢？答案是只有前两个线程会交换数据，第三个线程会进入阻塞状态。</p>
-<p><strong>CountDownLatch</strong>。CountDown代表计数递减，Latch是“门闩”的意思。也有人把它称为“屏障”。而CountDownLatch这个类的作用也很贴合这个名字的意义，假设某个线程在执行任务之前，需要等待其它线程完成一些前置任务，必须等所有的前置任务都完成，才能开始执行本线程的任务。</p>
+<h5 id="CountDownLatch"><a href="#CountDownLatch" class="headerlink" title="CountDownLatch"></a>CountDownLatch</h5><p>CountDown代表计数递减，Latch是“门闩”的意思。也有人把它称为“屏障”。而CountDownLatch这个类的作用也很贴合这个名字的意义，假设某个线程在执行任务之前，需要等待其它线程完成一些前置任务，必须等所有的前置任务都完成，才能开始执行本线程的任务。</p>
 <p>构造器中的<strong>计数值（count）实际上就是闭锁需要等待的线程数量</strong>。这个值只能被设置一次，而且CountDownLatch<strong>没有提供任何机制去重新设置这个计数值</strong>。</p>
-<p><strong>CyclicBarrirer</strong>从名字上来理解是“循环的屏障”的意思。前面提到了CountDownLatch一旦计数值<code>count</code>被降为0后，就不能再重新设置了，它只能起一次“屏障”的作用。而CyclicBarrier拥有CountDownLatch的所有功能，还可以使用<code>reset()</code>方法重置屏障。</p>
-<p><strong>Phaser</strong> 可以在运行期间动态地调整要同步的线程个数。</p>
-<h4 id="并发容器"><a href="#并发容器" class="headerlink" title="并发容器"></a>并发容器</h4><p>ch13,ch16,ch15</p>
+<h5 id="CyclicBarrirer"><a href="#CyclicBarrirer" class="headerlink" title="CyclicBarrirer"></a>CyclicBarrirer</h5><p><strong>CyclicBarrirer</strong>从名字上来理解是“循环的屏障”的意思。前面提到了CountDownLatch一旦计数值<code>count</code>被降为0后，就不能再重新设置了，它只能起一次“屏障”的作用。而CyclicBarrier拥有CountDownLatch的所有功能，还可以使用<code>reset()</code>方法重置屏障。</p>
+<h5 id="Phaser"><a href="#Phaser" class="headerlink" title="Phaser"></a>Phaser</h5><p><strong>Phaser</strong> 可以在运行期间动态地调整要同步的线程个数。</p>
+<h4 id="并发容器"><a href="#并发容器" class="headerlink" title="并发容器"></a>并发容器</h4><h5 id="BlockingQueue"><a href="#BlockingQueue" class="headerlink" title="BlockingQueue"></a>BlockingQueue</h5><p>BlockingQueue是一个带阻塞功能的队列，当入队列时，若队列已满，则阻塞调用者；当出队列时，若队列为空，则阻塞调用者。</p>
+<p>阻塞队列提供了四组不同的方法用于插入、移除、检查元素：</p>
+<table>
+<thead>
+<tr>
+<th align="center">方法\处理方式</th>
+<th align="center">抛出异常</th>
+<th align="center">返回特殊值</th>
+<th align="center">一直阻塞</th>
+<th align="center">超时退出</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">插入方法</td>
+<td align="center">add(e)</td>
+<td align="center">offer(e)</td>
+<td align="center"><strong>put(e)</strong></td>
+<td align="center">offer(e,time,unit)</td>
+</tr>
+<tr>
+<td align="center">移除方法</td>
+<td align="center">remove()</td>
+<td align="center">poll()</td>
+<td align="center"><strong>take()</strong></td>
+<td align="center">poll(time,unit)</td>
+</tr>
+<tr>
+<td align="center">检查方法</td>
+<td align="center">element()</td>
+<td align="center">peek()</td>
+<td align="center">-</td>
+<td align="center">-</td>
+</tr>
+</tbody></table>
+<ul>
+<li>抛出异常：如果试图的操作无法立即执行，抛异常。当阻塞队列满时候，再往队列里插入元素，会抛出IllegalStateException(“Queue full”)异常。当队列为空时，从队列里获取元素时会抛出NoSuchElementException异常 </li>
+<li>返回特殊值：如果试图的操作无法立即执行，返回一个特殊值，通常是true / false。</li>
+<li>一直阻塞：如果试图的操作无法立即执行，则一直阻塞或者响应中断。</li>
+<li>超时退出：如果试图的操作无法立即执行，该方法调用将会发生阻塞，直到能够执行，但等待时间不会超过给定值。返回一个特定值以告知该操作是否成功，通常是 true / false。</li>
+</ul>
+<p>ArrayBlockingQueue 是一个用数组实现的环形队列，在构造函数中，会要求传入数组的容量。</p>
+<p>LinkedBlockingQueue是一种基于单向链表的阻塞队列。因为队头和队尾是2个指针分开操作的，所以用了2把锁+2个条件，同时有1个AtomicInteger的原子变量记录count数。</p>
+<p>PriorityQueue是按照元素的优先级从小到大出队列的。正因为如此，PriorityQueue中的2个元素之间需要可以比较大小，并实现Comparable接口。如果不指定初始大小，内部会设定一个默认值11，当元素个数超过这个大小之后，会自动扩容。</p>
+<p>DelayQueue即延迟队列，也就是一个按延迟时间从小到大出队的PriorityQueue。所谓延迟时间，就是“未来将要执行的时间”-“当前时间”</p>
+<p>SynchronousQueue是一种特殊的BlockingQueue，它本身没有容量。先调put（..），线程会阻塞；直到另外一个线程调用了take（），两个线程才同时解锁，反之亦然</p>
+<h5 id="BlockingDeque"><a href="#BlockingDeque" class="headerlink" title="BlockingDeque"></a>BlockingDeque</h5><p>BlockingDeque定义了一个阻塞的双端队列接口，该接口在继承了BlockingQueue接口的同时，增加了对应的双端队列操作接口。该接口只有一个实现，就是LinkedBlockingDeque，和LinkedBlockingQueue基本一样，只是LinkedBlockingQueue是单向链表，而LinkedBlockingDeque是双向链表。</p>
+<h5 id="CopyOnWrite"><a href="#CopyOnWrite" class="headerlink" title="CopyOnWrite"></a>CopyOnWrite</h5><p>CopyOnWrite指在“写”的时候，不是直接“写”源数据，而是把数据拷贝一份进行修改，再通过悲观锁或者乐观锁的方式写回。那为什么不直接修改，而是要拷贝一份修改呢？这是为了在“读”的时候不加锁。</p>
+<p>CopyOnWriteArrayList的核心数据结构也是一个数组。</p>
+<p>CopyOnWriteArraySet 就是用Array 实现的一个Set，保证所有元素都不重复。其内部是封装的一个CopyOnWriteArrayList。</p>
+<p><strong>优点</strong>： CopyOnWriteArrayList经常被用于“读多写少”的并发场景，是因为CopyOnWriteArrayList无需任何同步措施，大大增强了读的性能。在Java中遍历线程非安全的List(如：ArrayList和 LinkedList)的时候，若中途有别的线程对List容器进行修改，那么会抛出ConcurrentModificationException异常。CopyOnWriteArrayList由于其”读写分离”，遍历和修改操作分别作用在不同的List容器，所以在使用迭代器遍历的时候，则不会抛出异常。</p>
+<p><strong>缺点</strong>： 第一个缺点是CopyOnWriteArrayList每次执行写操作都会将原容器进行拷贝一份，数据量大的时候，内存会存在较大的压力，可能会引起频繁Full GC（ZGC因为没有使用Full GC）。比如这些对象占用的内存200M左右，那么再写入100M数据进去，内存就会多占用300M。</p>
+<p>第二个缺点是CopyOnWriteArrayList由于实现的原因，写和读分别作用在不同新老容器上，在写操作执行过程中，读不会阻塞，但读取到的却是老容器的数据。</p>
+<h5 id="ConcurrentLinkedQueue-Deque"><a href="#ConcurrentLinkedQueue-Deque" class="headerlink" title="ConcurrentLinkedQueue/Deque"></a>ConcurrentLinkedQueue/Deque</h5><p>JDK并没有提供线程安全的List类，因为对List来说，<strong>很难去开发一个通用并且没有并发瓶颈的线程安全的List</strong>。因为即使简单的读操作，拿contains() 这样一个操作来说，很难想到搜索的时候如何避免锁住整个list。所以退一步，JDK提供了对队列和双端队列的线程安全的类：ConcurrentLinkedQueue和ConcurrentLinkedDeque。</p>
+<h5 id="ConcurrentHashMap"><a href="#ConcurrentHashMap" class="headerlink" title="ConcurrentHashMap"></a>ConcurrentHashMap</h5><p>ConcurrentHashMap同HashMap一样也是基于散列表的map，但是它提供了一种与Hashtable完全不同的加锁策略，提供更高效的并发性和伸缩性。</p>
+<p><strong>JDK 1.7</strong></p>
+<p>ConcurrentHashMap在JDK 1.7中，提供了一种粒度更细的加锁机制来实现在多线程下更高的性能，这种机制叫分段锁(Lock Striping)。</p>
+<p>提供的优点是：在并发环境下将实现更高的吞吐量，而在单线程环境下只损失非常小的性能。</p>
+<p>可以这样理解分段锁，就是<strong>将数据分段，对每一段数据分配一把锁</strong>。当一个线程占用锁访问其中一个段数据的时候，其他段的数据也能被其他线程访问。</p>
+<p>有些方法需要跨段，比如size()、isEmpty()、containsValue()，它们可能需要锁定整个表而不仅仅是某个段，这需要按顺序锁定所有段，操作完毕后，又按顺序释放所有段的锁。</p>
+<p>ConcurrentHashMap是由Segment数组结构和HashEntry数组结构组成。Segment是一种可重入锁ReentrantLock，HashEntry则用于存储键值对数据。</p>
+<p>一个ConcurrentHashMap里包含一个Segment数组，Segment的结构和HashMap类似，是一种数组和链表结构， 一个Segment里包含一个HashEntry数组，每个HashEntry是一个链表结构的元素， 每个Segment守护着一个HashEntry数组里的元素，当对HashEntry数组的数据进行修改时，必须首先获得它对应的Segment锁。</p>
+<p><strong>JDK 1.8</strong></p>
+<p>而在JDK 1.8中，ConcurrentHashMap主要做了两个优化：</p>
+<ul>
+<li>同HashMap一样，链表也会在长度达到8的时候转化为红黑树，这样可以提升大量冲突时候的查询效率；</li>
+<li>以某个位置的头结点（链表的头结点或红黑树的root结点）为锁，配合自旋+CAS避免不必要的锁开销，进一步提升并发性能。</li>
+</ul>
+<h5 id="ConcurrentSkipListMap-Set"><a href="#ConcurrentSkipListMap-Set" class="headerlink" title="ConcurrentSkipListMap/Set"></a>ConcurrentSkipListMap/Set</h5><p>在Concurrent包中，提供的key有序的HashMap，也就是ConcurrentSkipListMap，是基于SkipList（跳查表）来实现的</p>
+<p>JDK提供了ConcurrentSkipListSet，是线程安全的有序的集合。底层是使用ConcurrentSkipListMap实现。</p>
 <h4 id="线程池、Future"><a href="#线程池、Future" class="headerlink" title="线程池、Future"></a>线程池、Future</h4><p>ch12</p>
 <h4 id="ForkJoinPool"><a href="#ForkJoinPool" class="headerlink" title="ForkJoinPool"></a>ForkJoinPool</h4><p>ch18</p>
 <h4 id="CompletableFuture"><a href="#CompletableFuture" class="headerlink" title="CompletableFuture"></a>CompletableFuture</h4>
@@ -620,7 +688,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B9%B6%E5%8F%91%E5%9F%BA%E7%A1%80"><span class="nav-number">1.</span> <span class="nav-text">并发基础</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Thread%E7%B1%BB%E5%92%8CRunnable%E6%8E%A5%E5%8F%A3"><span class="nav-number">1.1.</span> <span class="nav-text">Thread类和Runnable接口</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B"><span class="nav-number">1.1.1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Callable%E3%80%81Future%E4%BC%98%E5%8C%96%E6%8E%A5%E5%8F%A3"><span class="nav-number">1.1.2.</span> <span class="nav-text">Callable、Future优化接口</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#JMM%E4%B8%8Ehappen-before"><span class="nav-number">1.2.</span> <span class="nav-text">JMM与happen-before</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#JMM"><span class="nav-number">1.2.1.</span> <span class="nav-text">JMM</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%8C%87%E4%BB%A4%E9%87%8D%E6%8E%92"><span class="nav-number">1.2.2.</span> <span class="nav-text">指令重排</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#happen-before"><span class="nav-number">1.2.3.</span> <span class="nav-text">happen-before</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#volatile"><span class="nav-number">1.3.</span> <span class="nav-text">volatile</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Synchronized"><span class="nav-number">1.4.</span> <span class="nav-text">Synchronized</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B-1"><span class="nav-number">1.4.1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%94%81"><span class="nav-number">1.4.2.</span> <span class="nav-text">锁</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%81%8F%E5%90%91%E9%94%81"><span class="nav-number">1.4.2.1.</span> <span class="nav-text">偏向锁</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E8%BD%BB%E9%87%8F%E9%94%81"><span class="nav-number">1.4.2.2.</span> <span class="nav-text">轻量锁</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E9%87%8D%E9%87%8F%E7%BA%A7%E9%94%81"><span class="nav-number">1.4.2.3.</span> <span class="nav-text">重量级锁</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E9%94%81%E5%8D%87%E7%BA%A7%E6%B5%81%E7%A8%8B"><span class="nav-number">1.4.2.4.</span> <span class="nav-text">锁升级流程</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B9%90%E8%A7%82%E9%94%81%E4%B8%8E%E6%82%B2%E8%A7%82%E9%94%81"><span class="nav-number">1.5.</span> <span class="nav-text">乐观锁与悲观锁</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B9%B6%E5%8F%91%E9%AB%98%E7%BA%A7"><span class="nav-number">2.</span> <span class="nav-text">并发高级</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Atomic%E7%B1%BB"><span class="nav-number">2.1.</span> <span class="nav-text">Atomic类</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B"><span class="nav-number">2.1.1.</span> <span class="nav-text">示例</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#ABA%E9%97%AE%E9%A2%98"><span class="nav-number">2.1.2.</span> <span class="nav-text">ABA问题</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#AtomicXXXFieldUpdater"><span class="nav-number">2.1.3.</span> <span class="nav-text">AtomicXXXFieldUpdater</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%95%B0%E7%BB%84%E6%93%8D%E4%BD%9C"><span class="nav-number">2.1.4.</span> <span class="nav-text">数组操作</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#AQS"><span class="nav-number">2.2.</span> <span class="nav-text">AQS</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%94%81%E4%B8%8E%E6%9D%A1%E4%BB%B6"><span class="nav-number">2.3.</span> <span class="nav-text">锁与条件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%90%8C%E6%AD%A5%E5%B7%A5%E5%85%B7"><span class="nav-number">2.4.</span> <span class="nav-text">同步工具</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B9%B6%E5%8F%91%E5%AE%B9%E5%99%A8"><span class="nav-number">2.5.</span> <span class="nav-text">并发容器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E6%B1%A0%E3%80%81Future"><span class="nav-number">2.6.</span> <span class="nav-text">线程池、Future</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ForkJoinPool"><span class="nav-number">2.7.</span> <span class="nav-text">ForkJoinPool</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CompletableFuture"><span class="nav-number">2.8.</span> <span class="nav-text">CompletableFuture</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B9%B6%E5%8F%91%E5%9F%BA%E7%A1%80"><span class="nav-number">1.</span> <span class="nav-text">并发基础</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Thread%E7%B1%BB%E5%92%8CRunnable%E6%8E%A5%E5%8F%A3"><span class="nav-number">1.1.</span> <span class="nav-text">Thread类和Runnable接口</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B"><span class="nav-number">1.1.1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Callable%E3%80%81Future%E4%BC%98%E5%8C%96%E6%8E%A5%E5%8F%A3"><span class="nav-number">1.1.2.</span> <span class="nav-text">Callable、Future优化接口</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#JMM%E4%B8%8Ehappen-before"><span class="nav-number">1.2.</span> <span class="nav-text">JMM与happen-before</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#JMM"><span class="nav-number">1.2.1.</span> <span class="nav-text">JMM</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%8C%87%E4%BB%A4%E9%87%8D%E6%8E%92"><span class="nav-number">1.2.2.</span> <span class="nav-text">指令重排</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#happen-before"><span class="nav-number">1.2.3.</span> <span class="nav-text">happen-before</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#volatile"><span class="nav-number">1.3.</span> <span class="nav-text">volatile</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Synchronized"><span class="nav-number">1.4.</span> <span class="nav-text">Synchronized</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B-1"><span class="nav-number">1.4.1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%94%81"><span class="nav-number">1.4.2.</span> <span class="nav-text">锁</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%81%8F%E5%90%91%E9%94%81"><span class="nav-number">1.4.2.1.</span> <span class="nav-text">偏向锁</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E8%BD%BB%E9%87%8F%E9%94%81"><span class="nav-number">1.4.2.2.</span> <span class="nav-text">轻量锁</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E9%87%8D%E9%87%8F%E7%BA%A7%E9%94%81"><span class="nav-number">1.4.2.3.</span> <span class="nav-text">重量级锁</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E9%94%81%E5%8D%87%E7%BA%A7%E6%B5%81%E7%A8%8B"><span class="nav-number">1.4.2.4.</span> <span class="nav-text">锁升级流程</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B9%90%E8%A7%82%E9%94%81%E4%B8%8E%E6%82%B2%E8%A7%82%E9%94%81"><span class="nav-number">1.5.</span> <span class="nav-text">乐观锁与悲观锁</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B9%B6%E5%8F%91%E9%AB%98%E7%BA%A7"><span class="nav-number">2.</span> <span class="nav-text">并发高级</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Atomic%E7%B1%BB"><span class="nav-number">2.1.</span> <span class="nav-text">Atomic类</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B"><span class="nav-number">2.1.1.</span> <span class="nav-text">示例</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#ABA%E9%97%AE%E9%A2%98"><span class="nav-number">2.1.2.</span> <span class="nav-text">ABA问题</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#AtomicXXXFieldUpdater"><span class="nav-number">2.1.3.</span> <span class="nav-text">AtomicXXXFieldUpdater</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%95%B0%E7%BB%84%E6%93%8D%E4%BD%9C"><span class="nav-number">2.1.4.</span> <span class="nav-text">数组操作</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#AQS"><span class="nav-number">2.2.</span> <span class="nav-text">AQS</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%94%81%E4%B8%8E%E6%9D%A1%E4%BB%B6"><span class="nav-number">2.3.</span> <span class="nav-text">锁与条件</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#ReentrantLock"><span class="nav-number">2.3.1.</span> <span class="nav-text">ReentrantLock</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#ReentrantReadWriteLock"><span class="nav-number">2.3.2.</span> <span class="nav-text">ReentrantReadWriteLock</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Condition"><span class="nav-number">2.3.3.</span> <span class="nav-text">Condition</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#StampedLock"><span class="nav-number">2.3.4.</span> <span class="nav-text">StampedLock</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%90%8C%E6%AD%A5%E5%B7%A5%E5%85%B7"><span class="nav-number">2.4.</span> <span class="nav-text">同步工具</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Semaphore"><span class="nav-number">2.4.1.</span> <span class="nav-text">Semaphore</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Exchanger"><span class="nav-number">2.4.2.</span> <span class="nav-text">Exchanger</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#CountDownLatch"><span class="nav-number">2.4.3.</span> <span class="nav-text">CountDownLatch</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#CyclicBarrirer"><span class="nav-number">2.4.4.</span> <span class="nav-text">CyclicBarrirer</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Phaser"><span class="nav-number">2.4.5.</span> <span class="nav-text">Phaser</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B9%B6%E5%8F%91%E5%AE%B9%E5%99%A8"><span class="nav-number">2.5.</span> <span class="nav-text">并发容器</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#BlockingQueue"><span class="nav-number">2.5.1.</span> <span class="nav-text">BlockingQueue</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#BlockingDeque"><span class="nav-number">2.5.2.</span> <span class="nav-text">BlockingDeque</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#CopyOnWrite"><span class="nav-number">2.5.3.</span> <span class="nav-text">CopyOnWrite</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#ConcurrentLinkedQueue-Deque"><span class="nav-number">2.5.4.</span> <span class="nav-text">ConcurrentLinkedQueue&#x2F;Deque</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#ConcurrentHashMap"><span class="nav-number">2.5.5.</span> <span class="nav-text">ConcurrentHashMap</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#ConcurrentSkipListMap-Set"><span class="nav-number">2.5.6.</span> <span class="nav-text">ConcurrentSkipListMap&#x2F;Set</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E6%B1%A0%E3%80%81Future"><span class="nav-number">2.6.</span> <span class="nav-text">线程池、Future</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ForkJoinPool"><span class="nav-number">2.7.</span> <span class="nav-text">ForkJoinPool</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CompletableFuture"><span class="nav-number">2.8.</span> <span class="nav-text">CompletableFuture</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
