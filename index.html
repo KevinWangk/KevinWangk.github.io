@@ -179,7 +179,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2021-10-10 09:46:09 / 修改时间：11:33:57" itemprop="dateCreated datePublished" datetime="2021-10-10T09:46:09+08:00">2021-10-10</time>
+              <time title="创建时间：2021-10-10 09:46:09 / 修改时间：11:37:21" itemprop="dateCreated datePublished" datetime="2021-10-10T09:46:09+08:00">2021-10-10</time>
             </span>
 
           
@@ -193,38 +193,15 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <span id="more"></span>
-
-<h4 id="为什么程序要载入内存"><a href="#为什么程序要载入内存" class="headerlink" title="为什么程序要载入内存"></a>为什么程序要载入内存</h4><p>CPU 的硬件电路被设计成只能运行处于内存中的程序，这样做的原因，首先是内存比较快，且容量大。其次为了方式统一，类似接口，存储介质很多（硬盘，软盘，U盘），操作系统跟硬件不需要付出额外努力去支持。</p>
-<h4 id="什么是载入内存"><a href="#什么是载入内存" class="headerlink" title="什么是载入内存"></a>什么是载入内存</h4><ul>
-<li>程序被加载器（软件或者硬件）加载到内存的某个区域</li>
-<li>CPU的cs:ip寄存器被指向这个程序的起始地址</li>
-</ul>
-<h4 id="BIOS（基本输入输出系统，Base-Input-amp-Output-System）"><a href="#BIOS（基本输入输出系统，Base-Input-amp-Output-System）" class="headerlink" title="BIOS（基本输入输出系统，Base Input &amp; Output System）"></a>BIOS（基本输入输出系统，Base Input &amp; Output System）</h4><h5 id="实模式下的1MB内存布局"><a href="#实模式下的1MB内存布局" class="headerlink" title="实模式下的1MB内存布局"></a>实模式下的1MB内存布局</h5><p>Intel 8086有20条地址总线，可以访问1MB的内存空间，2的20次方。</p>
-<p>0-0x9FFFF对应DRAM（动态随机访问内存：dynamic random access memory)，640kb；0xF0000-0xFFFFF对应的是ROM，里面存的是BIOS的代码，64kb；外设需要地址总线访问，提前预留一部分空间给外设、显存、硬盘控制器等，地址总线上的其余可用地址留给DRAM（我们眼中的物理内存）。</p>
-<p>注：如果地址总线不够用，物理内存多大都没用。</p>
-<p><strong>BIOS由硬件加载，入口地址是0xFFFF0</strong></p>
-<h5 id="CPU如何执行BIOS代码，即CPU中的cs：ip如何组合成0xFFFF0-？"><a href="#CPU如何执行BIOS代码，即CPU中的cs：ip如何组合成0xFFFF0-？" class="headerlink" title="CPU如何执行BIOS代码，即CPU中的cs：ip如何组合成0xFFFF0 ？"></a>CPU如何执行BIOS代码，即CPU中的cs：ip如何组合成0xFFFF0 ？</h5><p>接电一瞬间，CPU的cs：ip寄存器被强制初始化为0xF000: 0xFFF0，由于开机时处于实模式，所以段基址要乘16，也就是左移4位，即1111 0000 0000 0000左移4位–&gt;1111 0000 0000 0000 0000 为0xF0000+0xFFF0 = 0xFFFF0。此处是跳转指令 <strong>jmp far f000:e05b</strong>，跳向0xfe05b，这是BIOS代码真正执行的位置。</p>
-<h5 id="BIOS校验启动盘中位于0盘0道1扇区的内容"><a href="#BIOS校验启动盘中位于0盘0道1扇区的内容" class="headerlink" title="BIOS校验启动盘中位于0盘0道1扇区的内容"></a>BIOS校验启动盘中位于0盘0道1扇区的内容</h5><p>0盘0道1扇区本质上是0扇区（为什么为1，硬盘扇区表示法的CHS法），如果此扇区末尾两个字节分别是魔数0x55, 0xaa就认为此扇区存在可执行程序（主引导记录MBR），加载地址0x7c00（jmp 0:0x7c00）</p>
-<h4 id="MBR相关"><a href="#MBR相关" class="headerlink" title="MBR相关"></a>MBR相关</h4><p>MBR大小必须是512字节，为了保证两个魔数出现在末尾，即510字节、511字节处，并且bochs模拟的X86是小端字节序，所以最后两个字节是0xaa55，拆开就是0x55、0xaa。</p>
-<h5 id="NASM预留关键字-和"><a href="#NASM预留关键字-和" class="headerlink" title="NASM预留关键字$$$和$$$$"></a>NASM预留关键字$$$和$$$$</h5><p>$$$表示本行代码前的标号，$$$$表示本section的起始地址，如果section用了vstart=xxxx修饰，$$$$就是此section的虚拟地址xxxx，$$$就是以xxxx为起始地址的顺延。如果没有定义section，nasm默认代码全部为一个section，起始地址为0。</p>
-<h5 id="NASM用法"><a href="#NASM用法" class="headerlink" title="NASM用法"></a>NASM用法</h5><p>nasm -f  <format><filename>  [-o <output>]</p>
-<p> -o 用来指定输出可执行文件的名称，-f 用来指定输出可执行文件的格式，格式关注 bin 和 elf 格式，bin是默认输出格式，指纯二进制；elf是二进制可执行文件，里面掺杂了程序的内存布局，位置等信息，有一些与操作指令无关。</p>
-<h4 id="程序运行"><a href="#程序运行" class="headerlink" title="程序运行"></a>程序运行</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">进入root账户中的bochs-2.7文件夹</span><br><span class="line">在命令行中输入 bochs -f bochsrc.disk</span><br></pre></td></tr></table></figure>
-
-<p>写入mbr.S</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line">;主引导程序 </span><br><span class="line">;------------------------------------------------------------</span><br><span class="line">SECTION MBR vstart=0x7c00         </span><br><span class="line">   mov ax,cs      </span><br><span class="line">   mov ds,ax</span><br><span class="line">   mov es,ax</span><br><span class="line">   mov ss,ax</span><br><span class="line">   mov fs,ax</span><br><span class="line">   mov sp,0x7c00</span><br><span class="line"></span><br><span class="line">; 清屏 利用0x06号功能，上卷全部行，则可清屏。</span><br><span class="line">; -----------------------------------------------------------</span><br><span class="line">;INT 0x10   功能号:0x06	   功能描述:上卷窗口</span><br><span class="line">;------------------------------------------------------</span><br><span class="line">;输入：</span><br><span class="line">;AH 功能号= 0x06</span><br><span class="line">;AL = 上卷的行数(如果为0,表示全部)</span><br><span class="line">;BH = 上卷行属性</span><br><span class="line">;(CL,CH) = 窗口左上角的(X,Y)位置</span><br><span class="line">;(DL,DH) = 窗口右下角的(X,Y)位置</span><br><span class="line">;无返回值：</span><br><span class="line">   mov     ax, 0x600</span><br><span class="line">   mov     bx, 0x700</span><br><span class="line">   mov     cx, 0           ; 左上角: (0, 0)</span><br><span class="line">   mov     dx, 0x184f	   ; 右下角: (80,25),</span><br><span class="line">			   ; VGA文本模式中,一行只能容纳80个字符,共25行。</span><br><span class="line">			   ; 下标从0开始,所以0x18=24,0x4f=79</span><br><span class="line">   int     0x10            ; int 0x10</span><br><span class="line"></span><br><span class="line">;;;;;;;;;    下面这三行代码是获取光标位置    ;;;;;;;;;</span><br><span class="line">;.get_cursor获取当前光标位置,在光标位置处打印字符.</span><br><span class="line">   mov ah, 3		; 输入: 3号子功能是获取光标位置,需要存入ah寄存器</span><br><span class="line">   mov bh, 0		; bh寄存器存储的是待获取光标的页号</span><br><span class="line"></span><br><span class="line">   int 0x10		; 输出: ch=光标开始行,cl=光标结束行</span><br><span class="line">			; dh=光标所在行号,dl=光标所在列号</span><br><span class="line"></span><br><span class="line">;;;;;;;;;    获取光标位置结束    ;;;;;;;;;;;;;;;;</span><br><span class="line"></span><br><span class="line">;;;;;;;;;     打印字符串    ;;;;;;;;;;;</span><br><span class="line">   ;还是用10h中断,不过这次是调用13号子功能打印字符串</span><br><span class="line">   mov ax, message </span><br><span class="line">   mov bp, ax		; es:bp 为串首地址, es此时同cs一致，</span><br><span class="line">			; 开头时已经为sreg初始化</span><br><span class="line"></span><br><span class="line">   ; 光标位置要用到dx寄存器中内容,cx中的光标位置可忽略</span><br><span class="line">   mov cx, 5		; cx 为串长度,不包括结束符0的字符个数</span><br><span class="line">   mov ax, 0x1301	; 子功能号13是显示字符及属性,要存入ah寄存器,</span><br><span class="line">			; al设置写字符方式 ah=01: 显示字符串,光标跟随移动</span><br><span class="line">   mov bx, 0x2		; bh存储要显示的页号,此处是第0页,</span><br><span class="line">			; bl中是字符属性, 属性黑底绿字(bl = 02h)</span><br><span class="line">   int 0x10		; 执行BIOS 0x10 号中断</span><br><span class="line">;;;;;;;;;      打字字符串结束	 ;;;;;;;;;;;;;;;</span><br><span class="line"></span><br><span class="line">   jmp $		; 使程序悬停在此</span><br><span class="line"></span><br><span class="line">   message db &quot;1 MBR&quot;</span><br><span class="line">   times 510-($-$$) db 0</span><br><span class="line">   db 0x55,0xaa</span><br></pre></td></tr></table></figure>
-
-<p>使用nasm编译</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">nasm -o mbr.bin mbr.S</span><br><span class="line">ls -lb mbr.bin //查看是否是512字节</span><br></pre></td></tr></table></figure>
-
-<p>将mbr.bin写入硬盘中</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">dd if=/root/bochs-2.7/mbr.bin of=/root/bochs-2.7/hd60M.img bs=512 count=1 conv=notrunc //输入</span><br><span class="line">输出：</span><br><span class="line">记录了1+0 的读入</span><br><span class="line">记录了1+0 的写出</span><br><span class="line">512 bytes copied, 0.00617789 s, 82.9 kB/s</span><br></pre></td></tr></table></figure>
-
-<p>再次运行bochs</p>
-<p>输出1 MBR</p>
-<p>此章节结束</p>
-
+          <h4 id="为什么程序要载入内存"><a href="#为什么程序要载入内存" class="headerlink" title="为什么程序要载入内存"></a>为什么程序要载入内存</h4><p>CPU 的硬件电路被设计成只能运行处于内存中的程序，这样做的原因，首先是内存比较快，且容量大。其次为了方式统一，类似接口，存储介质很多（硬盘，软盘，U盘），操作系统跟硬件不需要付出额外努力去支持。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/10/10/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9C%9F%E7%9B%B8%E8%BF%98%E5%8E%9FCH2/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 

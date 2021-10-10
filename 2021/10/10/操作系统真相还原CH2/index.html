@@ -21,15 +21,15 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="为什么程序要载入内存CPU 的硬件电路被设计成只能运行处于内存中的程序，这样做的原因，首先是内存比较快，且容量大。其次为了方式统一，类似接口，存储介质很多（硬盘，软盘，U盘），操作系统跟硬件不需要付出额外努力去支持。 什么是载入内存 程序被加载器（软件或者硬件）加载到内存的某个区域 CPU的cs:ip寄存器被指向这个程序的起始地址  BIOS（基本输入输出系统，Base Input &amp;">
+  <meta name="description" content="为什么程序要载入内存CPU 的硬件电路被设计成只能运行处于内存中的程序，这样做的原因，首先是内存比较快，且容量大。其次为了方式统一，类似接口，存储介质很多（硬盘，软盘，U盘），操作系统跟硬件不需要付出额外努力去支持。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="操作系统真相还原CH2">
 <meta property="og:url" content="http://example.com/2021/10/10/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9C%9F%E7%9B%B8%E8%BF%98%E5%8E%9FCH2/index.html">
 <meta property="og:site_name" content="Kevin&#39;s Blog">
-<meta property="og:description" content="为什么程序要载入内存CPU 的硬件电路被设计成只能运行处于内存中的程序，这样做的原因，首先是内存比较快，且容量大。其次为了方式统一，类似接口，存储介质很多（硬盘，软盘，U盘），操作系统跟硬件不需要付出额外努力去支持。 什么是载入内存 程序被加载器（软件或者硬件）加载到内存的某个区域 CPU的cs:ip寄存器被指向这个程序的起始地址  BIOS（基本输入输出系统，Base Input &amp;">
+<meta property="og:description" content="为什么程序要载入内存CPU 的硬件电路被设计成只能运行处于内存中的程序，这样做的原因，首先是内存比较快，且容量大。其次为了方式统一，类似接口，存储介质很多（硬盘，软盘，U盘），操作系统跟硬件不需要付出额外努力去支持。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2021-10-10T01:46:09.000Z">
-<meta property="article:modified_time" content="2021-10-10T03:33:57.386Z">
+<meta property="article:modified_time" content="2021-10-10T03:37:21.566Z">
 <meta property="article:author" content="Kevin Wang">
 <meta property="article:tag" content="操作系统真相还原">
 <meta name="twitter:card" content="summary">
@@ -181,7 +181,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2021-10-10 09:46:09 / 修改时间：11:33:57" itemprop="dateCreated datePublished" datetime="2021-10-10T09:46:09+08:00">2021-10-10</time>
+              <time title="创建时间：2021-10-10 09:46:09 / 修改时间：11:37:21" itemprop="dateCreated datePublished" datetime="2021-10-10T09:46:09+08:00">2021-10-10</time>
             </span>
 
           
@@ -202,9 +202,9 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <span id="more"></span>
+        <h4 id="为什么程序要载入内存"><a href="#为什么程序要载入内存" class="headerlink" title="为什么程序要载入内存"></a>为什么程序要载入内存</h4><p>CPU 的硬件电路被设计成只能运行处于内存中的程序，这样做的原因，首先是内存比较快，且容量大。其次为了方式统一，类似接口，存储介质很多（硬盘，软盘，U盘），操作系统跟硬件不需要付出额外努力去支持。</p>
+<span id="more"></span>
 
-<h4 id="为什么程序要载入内存"><a href="#为什么程序要载入内存" class="headerlink" title="为什么程序要载入内存"></a>为什么程序要载入内存</h4><p>CPU 的硬件电路被设计成只能运行处于内存中的程序，这样做的原因，首先是内存比较快，且容量大。其次为了方式统一，类似接口，存储介质很多（硬盘，软盘，U盘），操作系统跟硬件不需要付出额外努力去支持。</p>
 <h4 id="什么是载入内存"><a href="#什么是载入内存" class="headerlink" title="什么是载入内存"></a>什么是载入内存</h4><ul>
 <li>程序被加载器（软件或者硬件）加载到内存的某个区域</li>
 <li>CPU的cs:ip寄存器被指向这个程序的起始地址</li>
