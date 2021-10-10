@@ -21,31 +21,33 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="记录生活">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Kevin&#39;s Blog">
-<meta property="og:url" content="http://example.com/index.html">
+  <meta name="description" content="为什么程序要载入内存CPU 的硬件电路被设计成只能运行处于内存中的程序，这样做的原因，首先是内存比较快，且容量大。其次为了方式统一，类似接口，存储介质很多（硬盘，软盘，U盘），操作系统跟硬件不需要付出额外努力去支持。 什么是载入内存 程序被加载器（软件或者硬件）加载到内存的某个区域 CPU的cs:ip寄存器被指向这个程序的起始地址  BIOS（基本输入输出系统，Base Input &amp;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="操作系统真相还原CH2">
+<meta property="og:url" content="http://example.com/2021/10/10/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9C%9F%E7%9B%B8%E8%BF%98%E5%8E%9FCH2/index.html">
 <meta property="og:site_name" content="Kevin&#39;s Blog">
-<meta property="og:description" content="记录生活">
+<meta property="og:description" content="为什么程序要载入内存CPU 的硬件电路被设计成只能运行处于内存中的程序，这样做的原因，首先是内存比较快，且容量大。其次为了方式统一，类似接口，存储介质很多（硬盘，软盘，U盘），操作系统跟硬件不需要付出额外努力去支持。 什么是载入内存 程序被加载器（软件或者硬件）加载到内存的某个区域 CPU的cs:ip寄存器被指向这个程序的起始地址  BIOS（基本输入输出系统，Base Input &amp;">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-10-10T01:46:09.000Z">
+<meta property="article:modified_time" content="2021-10-10T03:33:57.386Z">
 <meta property="article:author" content="Kevin Wang">
-<meta property="article:tag" content="Java">
+<meta property="article:tag" content="操作系统真相还原">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://example.com/">
+<link rel="canonical" href="http://example.com/2021/10/10/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9C%9F%E7%9B%B8%E8%BF%98%E5%8E%9FCH2/">
 
 
 <script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome : true,
-    isPost : false,
+    isHome : false,
+    isPost : true,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>Kevin's Blog</title>
+  <title>操作系统真相还原CH2 | Kevin's Blog</title>
   
 
 
@@ -148,9 +150,10 @@
         <div class="content-wrap">
           
 
-          <div class="content index posts-expand">
+          <div class="content post posts-expand">
             
-      
+
+    
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
@@ -166,10 +169,9 @@
       <meta itemprop="name" content="Kevin's Blog">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/10/10/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9C%9F%E7%9B%B8%E8%BF%98%E5%8E%9FCH2/" class="post-title-link" itemprop="url">操作系统真相还原CH2</a>
-        </h2>
+        <h1 class="post-title" itemprop="name headline">
+          操作系统真相还原CH2
+        </h1>
 
         <div class="post-meta">
             <span class="post-meta-item">
@@ -183,6 +185,13 @@
             </span>
 
           
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
 
         </div>
       </header>
@@ -193,7 +202,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <span id="more"></span>
+        <span id="more"></span>
 
 <h4 id="为什么程序要载入内存"><a href="#为什么程序要载入内存" class="headerlink" title="为什么程序要载入内存"></a>为什么程序要载入内存</h4><p>CPU 的硬件电路被设计成只能运行处于内存中的程序，这样做的原因，首先是内存比较快，且容量大。其次为了方式统一，类似接口，存储介质很多（硬盘，软盘，U盘），操作系统跟硬件不需要付出额外努力去支持。</p>
 <h4 id="什么是载入内存"><a href="#什么是载入内存" class="headerlink" title="什么是载入内存"></a>什么是载入内存</h4><ul>
@@ -225,622 +234,34 @@
 <p>输出1 MBR</p>
 <p>此章节结束</p>
 
-      
     </div>
 
     
     
     
+
       <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
+          <div class="post-tags">
+              <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9C%9F%E7%9B%B8%E8%BF%98%E5%8E%9F/" rel="tag"># 操作系统真相还原</a>
+          </div>
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/10/04/%E9%9A%8F%E7%AC%942/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Kevin Wang">
-      <meta itemprop="description" content="记录生活">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Kevin's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/10/04/%E9%9A%8F%E7%AC%942/" class="post-title-link" itemprop="url">随笔2</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2021-10-04 22:21:01 / 修改时间：22:49:05" itemprop="dateCreated datePublished" datetime="2021-10-04T22:21:01+08:00">2021-10-04</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>来北京两个星期了。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/10/04/%E9%9A%8F%E7%AC%942/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
         
-      
-    </div>
 
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/09/20/JVM%E7%B1%BB%E5%8A%A0%E8%BD%BD/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Kevin Wang">
-      <meta itemprop="description" content="记录生活">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Kevin's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/09/20/JVM%E7%B1%BB%E5%8A%A0%E8%BD%BD/" class="post-title-link" itemprop="url">JVM类加载</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2021-09-20 16:27:37 / 修改时间：21:08:44" itemprop="dateCreated datePublished" datetime="2021-09-20T16:27:37+08:00">2021-09-20</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>类加载过程：加载、链接（验证、准备、解析）、初始化</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/09/20/JVM%E7%B1%BB%E5%8A%A0%E8%BD%BD/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
         
-      
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/10/04/%E9%9A%8F%E7%AC%942/" rel="prev" title="随笔2">
+      <i class="fa fa-chevron-left"></i> 随笔2
+    </a></div>
+      <div class="post-nav-item"></div>
     </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
       </footer>
+    
   </article>
   
   
   
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/09/15/LeetCode-No4-Median-of-Two-Sorted-Arrays/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Kevin Wang">
-      <meta itemprop="description" content="记录生活">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Kevin's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/09/15/LeetCode-No4-Median-of-Two-Sorted-Arrays/" class="post-title-link" itemprop="url">LeetCode No4 Median of Two Sorted Arrays</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2021-09-15 14:35:15 / 修改时间：15:06:30" itemprop="dateCreated datePublished" datetime="2021-09-15T14:35:15+08:00">2021-09-15</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h3><p>Given two sorted arrays <code>nums1</code> and <code>nums2</code> of size <code>m</code> and <code>n</code> respectively, return <strong>the median</strong> of the two sorted arrays.</p>
-<p>给定两个大小分别为 m 和 n 的正序（从小到大）数组 nums1 和 nums2。请你找出并返回这两个正序数组的中位数 </p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/09/15/LeetCode-No4-Median-of-Two-Sorted-Arrays/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/09/15/LeetCode-No3-Longest-Substring-Without-Repeating-Characters/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Kevin Wang">
-      <meta itemprop="description" content="记录生活">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Kevin's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/09/15/LeetCode-No3-Longest-Substring-Without-Repeating-Characters/" class="post-title-link" itemprop="url">LeetCode No3 Longest Substring Without Repeating Characters</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2021-09-15 13:57:39 / 修改时间：14:32:38" itemprop="dateCreated datePublished" datetime="2021-09-15T13:57:39+08:00">2021-09-15</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h3><p>Given a string <code>s</code>, find the length of the <strong>longest substring</strong> without repeating characters.</p>
-<p>给定一个字符串 s ，请你找出其中不含有重复字符的 最长子串的长度。 </p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/09/15/LeetCode-No3-Longest-Substring-Without-Repeating-Characters/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/09/11/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9C%9F%E7%9B%B8%E8%BF%98%E5%8E%9FCh0/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Kevin Wang">
-      <meta itemprop="description" content="记录生活">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Kevin's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/09/11/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9C%9F%E7%9B%B8%E8%BF%98%E5%8E%9FCh0/" class="post-title-link" itemprop="url">操作系统真相还原Ch0</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2021-09-11 16:26:08 / 修改时间：16:31:15" itemprop="dateCreated datePublished" datetime="2021-09-11T16:26:08+08:00">2021-09-11</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>​     </p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/09/11/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9C%9F%E7%9B%B8%E8%BF%98%E5%8E%9FCh0/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/09/03/IDEA%E4%B8%AD%E7%9A%84Tomcat%E5%85%B3%E4%BA%8E%E4%B8%8D%E5%90%8C%E9%A1%B9%E7%9B%AE%E7%9A%84%E8%AE%BF%E9%97%AE%E9%93%BE%E6%8E%A5%E9%94%99%E8%AF%AF/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Kevin Wang">
-      <meta itemprop="description" content="记录生活">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Kevin's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/09/03/IDEA%E4%B8%AD%E7%9A%84Tomcat%E5%85%B3%E4%BA%8E%E4%B8%8D%E5%90%8C%E9%A1%B9%E7%9B%AE%E7%9A%84%E8%AE%BF%E9%97%AE%E9%93%BE%E6%8E%A5%E9%94%99%E8%AF%AF/" class="post-title-link" itemprop="url">IDEA中的Tomcat关于不同项目的访问链接错误</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2021-09-03 08:46:09 / 修改时间：09:04:28" itemprop="dateCreated datePublished" datetime="2021-09-03T08:46:09+08:00">2021-09-03</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>软件版本为IDEA 2020.1 ，Tomcat 9</p>
-<p>遇到的问题是在看<strong>狂神说Java</strong>中SpringMVC模块视频中的问题。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/09/03/IDEA%E4%B8%AD%E7%9A%84Tomcat%E5%85%B3%E4%BA%8E%E4%B8%8D%E5%90%8C%E9%A1%B9%E7%9B%AE%E7%9A%84%E8%AE%BF%E9%97%AE%E9%93%BE%E6%8E%A5%E9%94%99%E8%AF%AF/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/08/29/%E5%BB%BA%E9%80%A0%E8%80%85%E6%A8%A1%E5%BC%8F%E4%B8%8E%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Kevin Wang">
-      <meta itemprop="description" content="记录生活">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Kevin's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/08/29/%E5%BB%BA%E9%80%A0%E8%80%85%E6%A8%A1%E5%BC%8F%E4%B8%8E%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F/" class="post-title-link" itemprop="url">建造者模式与观察者模式</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2021-08-29 18:36:38 / 修改时间：20:18:48" itemprop="dateCreated datePublished" datetime="2021-08-29T18:36:38+08:00">2021-08-29</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>​     </p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/08/29/%E5%BB%BA%E9%80%A0%E8%80%85%E6%A8%A1%E5%BC%8F%E4%B8%8E%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/08/28/%E6%A8%A1%E6%9D%BF%E6%96%B9%E6%B3%95%E6%A8%A1%E5%BC%8F%E4%B8%8E%E5%A4%96%E8%A7%82%E6%A8%A1%E5%BC%8F/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Kevin Wang">
-      <meta itemprop="description" content="记录生活">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Kevin's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/08/28/%E6%A8%A1%E6%9D%BF%E6%96%B9%E6%B3%95%E6%A8%A1%E5%BC%8F%E4%B8%8E%E5%A4%96%E8%A7%82%E6%A8%A1%E5%BC%8F/" class="post-title-link" itemprop="url">模板方法模式与外观模式</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2021-08-28 14:14:43 / 修改时间：22:56:30" itemprop="dateCreated datePublished" datetime="2021-08-28T14:14:43+08:00">2021-08-28</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>​        </p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/08/28/%E6%A8%A1%E6%9D%BF%E6%96%B9%E6%B3%95%E6%A8%A1%E5%BC%8F%E4%B8%8E%E5%A4%96%E8%A7%82%E6%A8%A1%E5%BC%8F/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/08/27/%E5%B7%A5%E5%8E%82%E6%96%B9%E6%B3%95%E6%A8%A1%E5%BC%8F%E4%B8%8E%E5%8E%9F%E5%9E%8B%E6%A8%A1%E5%BC%8F/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Kevin Wang">
-      <meta itemprop="description" content="记录生活">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Kevin's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/08/27/%E5%B7%A5%E5%8E%82%E6%96%B9%E6%B3%95%E6%A8%A1%E5%BC%8F%E4%B8%8E%E5%8E%9F%E5%9E%8B%E6%A8%A1%E5%BC%8F/" class="post-title-link" itemprop="url">工厂方法模式与原型模式</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2021-08-27 18:44:50 / 修改时间：20:59:59" itemprop="dateCreated datePublished" datetime="2021-08-27T18:44:50+08:00">2021-08-27</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>​    </p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/08/27/%E5%B7%A5%E5%8E%82%E6%96%B9%E6%B3%95%E6%A8%A1%E5%BC%8F%E4%B8%8E%E5%8E%9F%E5%9E%8B%E6%A8%A1%E5%BC%8F/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-
-  
-  <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
-  </nav>
 
 
 
@@ -892,6 +313,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E7%A8%8B%E5%BA%8F%E8%A6%81%E8%BD%BD%E5%85%A5%E5%86%85%E5%AD%98"><span class="nav-number">1.</span> <span class="nav-text">为什么程序要载入内存</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E8%BD%BD%E5%85%A5%E5%86%85%E5%AD%98"><span class="nav-number">2.</span> <span class="nav-text">什么是载入内存</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#BIOS%EF%BC%88%E5%9F%BA%E6%9C%AC%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E7%B3%BB%E7%BB%9F%EF%BC%8CBase-Input-amp-Output-System%EF%BC%89"><span class="nav-number">3.</span> <span class="nav-text">BIOS（基本输入输出系统，Base Input &amp; Output System）</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%AE%9E%E6%A8%A1%E5%BC%8F%E4%B8%8B%E7%9A%841MB%E5%86%85%E5%AD%98%E5%B8%83%E5%B1%80"><span class="nav-number">3.1.</span> <span class="nav-text">实模式下的1MB内存布局</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#CPU%E5%A6%82%E4%BD%95%E6%89%A7%E8%A1%8CBIOS%E4%BB%A3%E7%A0%81%EF%BC%8C%E5%8D%B3CPU%E4%B8%AD%E7%9A%84cs%EF%BC%9Aip%E5%A6%82%E4%BD%95%E7%BB%84%E5%90%88%E6%88%900xFFFF0-%EF%BC%9F"><span class="nav-number">3.2.</span> <span class="nav-text">CPU如何执行BIOS代码，即CPU中的cs：ip如何组合成0xFFFF0 ？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#BIOS%E6%A0%A1%E9%AA%8C%E5%90%AF%E5%8A%A8%E7%9B%98%E4%B8%AD%E4%BD%8D%E4%BA%8E0%E7%9B%980%E9%81%931%E6%89%87%E5%8C%BA%E7%9A%84%E5%86%85%E5%AE%B9"><span class="nav-number">3.3.</span> <span class="nav-text">BIOS校验启动盘中位于0盘0道1扇区的内容</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#MBR%E7%9B%B8%E5%85%B3"><span class="nav-number">4.</span> <span class="nav-text">MBR相关</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#NASM%E9%A2%84%E7%95%99%E5%85%B3%E9%94%AE%E5%AD%97-%E5%92%8C"><span class="nav-number">4.1.</span> <span class="nav-text">NASM预留关键字$$$和$$$$</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#NASM%E7%94%A8%E6%B3%95"><span class="nav-number">4.2.</span> <span class="nav-text">NASM用法</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A8%8B%E5%BA%8F%E8%BF%90%E8%A1%8C"><span class="nav-number">5.</span> <span class="nav-text">程序运行</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
