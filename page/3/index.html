@@ -154,6 +154,144 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/08/12/Java%E5%B9%B6%E5%8F%91%E6%A1%86%E6%9E%B6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Kevin Wang">
+      <meta itemprop="description" content="记录生活">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Kevin's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/08/12/Java%E5%B9%B6%E5%8F%91%E6%A1%86%E6%9E%B6/" class="post-title-link" itemprop="url">Java并发框架</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-08-12 11:03:21" itemprop="dateCreated datePublished" datetime="2021-08-12T11:03:21+08:00">2021-08-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-08-17 18:47:42" itemprop="dateModified" datetime="2021-08-17T18:47:42+08:00">2021-08-17</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>Java并发的书籍断断续续的看了三本：Java并发编程之美，实战Java高并发程序设计，深入浅出Java多线程。看关于线程、进程、volatile、synchronized这些知识点的时候还是觉得非常容易理解的，但是每次看到Atomic、Future、Executor等这些J.U.C工具类就看不明白了，所以就想弄一个框架梳理一下高并发到底在做什么。本文结合<strong>Java并发实现原理：JDK源码剖析</strong>和<strong>深入浅出Java多线程</strong>来进行总结。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/08/12/Java%E5%B9%B6%E5%8F%91%E6%A1%86%E6%9E%B6/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/08/03/%E7%94%B5%E8%B7%AF%E4%BA%A4%E6%8D%A2VS%E5%88%86%E7%BB%84%E4%BA%A4%E6%8D%A2VS%E6%8A%A5%E6%96%87%E4%BA%A4%E6%8D%A2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Kevin Wang">
+      <meta itemprop="description" content="记录生活">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Kevin's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/08/03/%E7%94%B5%E8%B7%AF%E4%BA%A4%E6%8D%A2VS%E5%88%86%E7%BB%84%E4%BA%A4%E6%8D%A2VS%E6%8A%A5%E6%96%87%E4%BA%A4%E6%8D%A2/" class="post-title-link" itemprop="url">电路交换VS分组交换VS报文交换</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-08-03 12:08:25 / 修改时间：12:37:52" itemprop="dateCreated datePublished" datetime="2021-08-03T12:08:25+08:00">2021-08-03</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><p><strong>电路交换</strong>：电路交换需要建立一条专用的数据通信路径，这条路径上可能包含许多中间节点。这条通信路径在整个通信过程中将被独占，直到通信结束才会释放资源。电路连接的三个阶段：（1）建立连接 （2）通信 （3）释放连接。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/08/03/%E7%94%B5%E8%B7%AF%E4%BA%A4%E6%8D%A2VS%E5%88%86%E7%BB%84%E4%BA%A4%E6%8D%A2VS%E6%8A%A5%E6%96%87%E4%BA%A4%E6%8D%A2/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/2021/08/02/LeetCode-No2-Add-Two-Numbers/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -358,14 +496,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">22</span>
+          <span class="site-state-item-count">24</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-count">10</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
