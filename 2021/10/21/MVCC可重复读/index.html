@@ -21,18 +21,20 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="记录生活">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Kevin&#39;s Blog">
-<meta property="og:url" content="http://example.com/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/index.html">
+  <meta name="description" content="可重复读中的一些想法。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MVCC可重复读">
+<meta property="og:url" content="http://example.com/2021/10/21/MVCC%E5%8F%AF%E9%87%8D%E5%A4%8D%E8%AF%BB/index.html">
 <meta property="og:site_name" content="Kevin&#39;s Blog">
-<meta property="og:description" content="记录生活">
+<meta property="og:description" content="可重复读中的一些想法。">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-10-21T11:09:08.000Z">
+<meta property="article:modified_time" content="2021-10-21T11:21:45.448Z">
 <meta property="article:author" content="Kevin Wang">
-<meta property="article:tag" content="Java">
+<meta property="article:tag" content="MySQL">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://example.com/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/">
+<link rel="canonical" href="http://example.com/2021/10/21/MVCC%E5%8F%AF%E9%87%8D%E5%A4%8D%E8%AF%BB/">
 
 
 <script id="page-configurations">
@@ -40,12 +42,12 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false,
+    isPost : true,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>标签: 生物信息学 | Kevin's Blog</title>
+  <title>MVCC可重复读 | Kevin's Blog</title>
   
 
 
@@ -148,51 +150,175 @@
         <div class="content-wrap">
           
 
-          <div class="content tag">
+          <div class="content post posts-expand">
             
 
+    
   
   
-  
-  <div class="post-block">
-    <div class="posts-collapse">
-      <div class="collection-title">
-        <h2 class="collection-header">生物信息学
-          <small>标签</small>
-        </h2>
-      </div>
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/10/21/MVCC%E5%8F%AF%E9%87%8D%E5%A4%8D%E8%AF%BB/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Kevin Wang">
+      <meta itemprop="description" content="记录生活">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Kevin's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          MVCC可重复读
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-10-21 19:09:08 / 修改时间：19:21:45" itemprop="dateCreated datePublished" datetime="2021-10-21T19:09:08+08:00">2021-10-21</time>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-    <div class="collection-year">
-      <span class="collection-header">2021</span>
+        <p>可重复读中的一些想法。</p>
+<span id="more"></span>
+
+<p>在一些文章中，大家都在说明下面这个事情，两个select操作都能够查询出来同样的数据。</p>
+<table>
+<thead>
+<tr>
+<th>事务A</th>
+<th>事务B</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>begin；</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>begin；</td>
+</tr>
+<tr>
+<td>update；</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>update无关操作为了分配事务ID</td>
+</tr>
+<tr>
+<td></td>
+<td>select；</td>
+</tr>
+<tr>
+<td>update；</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>select；</td>
+</tr>
+<tr>
+<td>commit；</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>commit；</td>
+</tr>
+</tbody></table>
+<p>在MySQL可重复读这个级别中，我自己有一个事情没明白，就动手实现了一下。</p>
+<table>
+<thead>
+<tr>
+<th>事务A</th>
+<th>事务B</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>begin；</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>begin；</td>
+</tr>
+<tr>
+<td>update；</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>update无关操作；</td>
+</tr>
+<tr>
+<td>commit；</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>select；</td>
+</tr>
+<tr>
+<td></td>
+<td>commit；</td>
+</tr>
+</tbody></table>
+<p>该select操作的结果与第一个例子相同，具体解释原因在一些文章中能够看到。</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://juejin.cn/book/6844733769996304392">MySQL 是怎样运行的：从根儿上理解 MySQL</a></p>
+</blockquote>
+
     </div>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+    
+    
+    
 
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-10-20T10:35:49+08:00"
-              content="2021-10-20">
-          10-20
-        </time>
-      </div>
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/MySQL/" rel="tag"># MySQL</a>
+          </div>
 
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/10/20/%E4%BA%8C%E5%88%86%E7%B1%BB%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87AUROC-AUPRC/" itemprop="url">
-            <span itemprop="name">二分类评价指标AUROC/AUPRC</span>
-          </a>
-      </div>
+        
 
-    </header>
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/10/20/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9C%9F%E7%9B%B8%E8%BF%98%E5%8E%9FCh4/" rel="prev" title="操作系统真相还原Ch4">
+      <i class="fa fa-chevron-left"></i> 操作系统真相还原Ch4
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
   </article>
-
-    </div>
-  </div>
   
   
-  
-
   
 
 
