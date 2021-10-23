@@ -21,19 +21,19 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="进入保护模式保护模式是在loader.bin中进入的，除了要更新loader.S之外，还应该更新两个文件：mbr.S和include&#x2F;boot.inc 由于loader.bin超过了512字节，所以要把mbr.S中加载loader.bin（loader.bin由mbr.bin中的函数rd_disk_m_16读入）的读入扇区增大，由1扇区增加到4扇区，待读入的扇区数（cx）应该大于loader.bi">
+  <meta name="description" content="进入保护模式">
 <meta property="og:type" content="article">
 <meta property="og:title" content="操作系统真相还原Ch4-2">
 <meta property="og:url" content="http://example.com/2021/10/22/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9C%9F%E7%9B%B8%E8%BF%98%E5%8E%9FCh4-2/index.html">
 <meta property="og:site_name" content="Kevin&#39;s Blog">
-<meta property="og:description" content="进入保护模式保护模式是在loader.bin中进入的，除了要更新loader.S之外，还应该更新两个文件：mbr.S和include&#x2F;boot.inc 由于loader.bin超过了512字节，所以要把mbr.S中加载loader.bin（loader.bin由mbr.bin中的函数rd_disk_m_16读入）的读入扇区增大，由1扇区增加到4扇区，待读入的扇区数（cx）应该大于loader.bi">
+<meta property="og:description" content="进入保护模式">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/2021/10/22/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9C%9F%E7%9B%B8%E8%BF%98%E5%8E%9FCh4-2/6.png">
 <meta property="og:image" content="http://example.com/2021/10/22/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9C%9F%E7%9B%B8%E8%BF%98%E5%8E%9FCh4-2/7.png">
 <meta property="og:image" content="http://example.com/2021/10/22/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9C%9F%E7%9B%B8%E8%BF%98%E5%8E%9FCh4-2/8.png">
 <meta property="og:image" content="http://example.com/2021/10/22/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9C%9F%E7%9B%B8%E8%BF%98%E5%8E%9FCh4-2/9.png">
 <meta property="article:published_time" content="2021-10-22T05:07:25.000Z">
-<meta property="article:modified_time" content="2021-10-23T03:16:16.197Z">
+<meta property="article:modified_time" content="2021-10-23T03:20:37.568Z">
 <meta property="article:author" content="Kevin Wang">
 <meta property="article:tag" content="操作系统真相还原">
 <meta name="twitter:card" content="summary">
@@ -192,7 +192,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-10-23 11:16:16" itemprop="dateModified" datetime="2021-10-23T11:16:16+08:00">2021-10-23</time>
+                <time title="修改时间：2021-10-23 11:20:37" itemprop="dateModified" datetime="2021-10-23T11:20:37+08:00">2021-10-23</time>
               </span>
 
           
@@ -213,7 +213,9 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h3 id="进入保护模式"><a href="#进入保护模式" class="headerlink" title="进入保护模式"></a>进入保护模式</h3><p>保护模式是在<code>loader.bin</code>中进入的，除了要更新<code>loader.S</code>之外，还应该更新两个文件：<code>mbr.S</code>和<code>include/boot.inc</code></p>
+        <h3 id="进入保护模式"><a href="#进入保护模式" class="headerlink" title="进入保护模式"></a>进入保护模式</h3><span id="more"></span>
+
+<p>保护模式是在<code>loader.bin</code>中进入的，除了要更新<code>loader.S</code>之外，还应该更新两个文件：<code>mbr.S</code>和<code>include/boot.inc</code></p>
 <p>由于<code>loader.bin</code>超过了512字节，所以要把<code>mbr.S</code>中加载<code>loader.bin</code>（<code>loader.bin</code>由<code>mbr.bin</code>中的函数<code>rd_disk_m_16</code>读入）的读入扇区增大，由1扇区增加到4扇区，待读入的扇区数（cx）应该大于<code>loader.bin</code>的大小</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">;在mbr.S中修改</span><br><span class="line">mov cx,4			;待读入的扇区数</span><br><span class="line">call rd_disk_m_16	;函数调用，以下读取程序的起始部分</span><br></pre></td></tr></table></figure>
 
@@ -379,7 +381,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">29</span>
+          <span class="site-state-item-count">28</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
