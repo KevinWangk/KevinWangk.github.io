@@ -5,7 +5,7 @@
   
 
 
-<html class="theme-next muse use-motion" lang="zh-CN">
+<html class="theme-next gemini use-motion" lang="zh-Hans">
 <head>
   <meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -87,7 +87,7 @@
 <meta property="og:url" content="http://example.com/2021/10/25/%E5%89%91%E6%8C%87offer-T3%EF%BC%9A%E4%BA%8C%E7%BB%B4%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E6%9F%A5%E6%89%BE/index.html">
 <meta property="og:site_name" content="Kevin&#39;s Blog">
 <meta property="og:description" content="二维数组（m*n）中的查找：">
-<meta property="og:locale" content="zh_CN">
+<meta property="og:locale">
 <meta property="article:published_time" content="2021-10-25T05:52:17.000Z">
 <meta property="article:modified_time" content="2021-10-26T11:34:12.557Z">
 <meta property="article:author" content="Kevin Wang">
@@ -100,7 +100,7 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '',
-    scheme: 'Muse',
+    scheme: 'Gemini',
     version: '5.1.4',
     sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
     fancybox: true,
@@ -108,7 +108,7 @@
     motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
     duoshuo: {
       userId: '0',
-      author: 'Author'
+      author: '博主'
     },
     algolia: {
       applicationID: '',
@@ -140,7 +140,7 @@
 
 <meta name="generator" content="Hexo 5.4.0"></head>
 
-<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
 
   
   
@@ -184,41 +184,51 @@
       
         
         <li class="menu-item menu-item-home">
-          <a href="/%20" rel="section">
+          <a href="/" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
             
-            Home
+            首页
           </a>
         </li>
       
         
         <li class="menu-item menu-item-about">
-          <a href="/about/%20" rel="section">
+          <a href="/about" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
             
-            About
+            关于
           </a>
         </li>
       
         
         <li class="menu-item menu-item-tags">
-          <a href="/tags/%20" rel="section">
+          <a href="/tags" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
             
-            Tags
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            分类
           </a>
         </li>
       
         
         <li class="menu-item menu-item-archives">
-          <a href="/archives/%20" rel="section">
+          <a href="/archives" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
             
-            Archives
+            归档
           </a>
         </li>
       
@@ -282,9 +292,9 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Posted on</span>
+                <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2021-10-25T13:52:17+08:00">
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-10-25T13:52:17+08:00">
                 2021-10-25
               </time>
             
@@ -306,37 +316,6 @@
           
 
           
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">Words count in article&#58;</span>
-                
-                <span title="Words count in article">
-                  
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">Reading time &asymp;</span>
-                
-                <span title="Reading time">
-                  
-                </span>
-              
-            </div>
-          
 
           
 
@@ -355,14 +334,15 @@
       
         <p>二维数组（m*n）中的查找：</p>
 <span id="more"></span>
-
 <p>在一个 n * m 的二维数组中，每一行都按照从左到右递增的顺序排序，每一列都按照从上到下递增的顺序排序。请完成一个高效的函数，输入这样的一个二维数组和一个整数，判断数组中是否含有该整数。</p>
-<p><code>input: [[1,4,7,11,15],[2,5,8,12,19],[3,6,9,16,22],[10,13,14,17,24],[18,21,23,26,30]]</code><br><code>input: 5</code></p>
+<p><code>input: [[1,4,7,11,15],[2,5,8,12,19],[3,6,9,16,22],[10,13,14,17,24],[18,21,23,26,30]]</code> <code>input: 5</code></p>
 <p><code>output: true</code></p>
-<h4 id="方法一：遍历法-略"><a href="#方法一：遍历法-略" class="headerlink" title="方法一：遍历法 (略)"></a>方法一：遍历法 (略)</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">    <span class="keyword">for</span> i </span><br><span class="line">        <span class="keyword">for</span> j</span><br><span class="line">            ...</span><br><span class="line">        end</span><br><span class="line">    end</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
-
-<h4 id="方法2：对对角元素上进行筛选（略）"><a href="#方法2：对对角元素上进行筛选（略）" class="headerlink" title="方法2：对对角元素上进行筛选（略）"></a>方法2：对对角元素上进行筛选（略）</h4><p>使得<code>A(i,i) &lt;= target &lt;= A(i+1,i+1)</code>，则只需要对数组的左下角和右上角进行遍历即可，还可以进行递归操作优化。最坏的情况比方法1减少至少一半操作量，不过还是要遍历。</p>
-<h4 id="方法3：通过四个边界进行筛选"><a href="#方法3：通过四个边界进行筛选" class="headerlink" title="方法3：通过四个边界进行筛选"></a>方法3：通过四个边界进行筛选</h4><p>四条边界线，四种情况讨论：(在下面的循环中如果有相等的元素则直接return true)</p>
+<h4 id="方法一遍历法-略">方法一：遍历法 (略)</h4>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">    <span class="keyword">for</span> i </span><br><span class="line">        <span class="keyword">for</span> j</span><br><span class="line">            ...</span><br><span class="line">        end</span><br><span class="line">    end</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<h4 id="方法2对对角元素上进行筛选略">方法2：对对角元素上进行筛选（略）</h4>
+<p>使得<code>A(i,i) &lt;= target &lt;= A(i+1,i+1)</code>，则只需要对数组的左下角和右上角进行遍历即可，还可以进行递归操作优化。最坏的情况比方法1减少至少一半操作量，不过还是要遍历。</p>
+<h4 id="方法3通过四个边界进行筛选">方法3：通过四个边界进行筛选</h4>
+<p>四条边界线，四种情况讨论：(在下面的循环中如果有相等的元素则直接return true)</p>
 <ul>
 <li>上边界：如果<code>matrix[0][i] &lt; target &lt; matrix[0][i+1]</code>，则第i+1列及之后的可以筛选出去</li>
 <li>下边界：如果<code>matrix[m-1][j] &lt; target &lt; matrix[m-1][j+1]</code>，则第j列及之前的可以筛选出去</li>
@@ -371,88 +351,53 @@
 </ul>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th></th>
-<th align="center"></th>
+<th style="text-align: center;"></th>
 <th></th>
 <th><code>matrix[0][i]</code></th>
 <th></th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr class="odd">
 <td></td>
-<td align="center"></td>
+<td style="text-align: center;"></td>
 <td></td>
 <td></td>
 <td><code>matrix[k+1][n-1]</code></td>
 </tr>
-<tr>
+<tr class="even">
 <td></td>
-<td align="center"></td>
+<td style="text-align: center;"></td>
 <td></td>
 <td></td>
 <td></td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>matrix[h][0]</code></td>
-<td align="center"></td>
+<td style="text-align: center;"></td>
 <td></td>
 <td></td>
 <td></td>
 </tr>
-<tr>
+<tr class="even">
 <td></td>
-<td align="center"><code>matrix[m-1][j+1]</code></td>
+<td style="text-align: center;"><code>matrix[m-1][j+1]</code></td>
 <td></td>
 <td></td>
 <td></td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <p><code>k+1&lt;=h and j+1&lt;=i</code>一定成立</p>
 <p>所以需要遍历<code>k+1 -&gt; h</code>行，<code>j+1 -&gt; i</code>列，<code>matrix[k+1][j+1] -&gt; matrix[h][i]</code></p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">findNumberIn2DArray</span><span class="params">(<span class="keyword">int</span>[][] matrix, <span class="keyword">int</span> target)</span> </span>&#123;</span><br><span class="line">     <span class="keyword">if</span>((matrix==<span class="keyword">null</span>||matrix.length==<span class="number">0</span>)||(matrix.length==<span class="number">1</span>&amp;&amp;matrix[<span class="number">0</span>].length==<span class="number">0</span>)) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">     &#125;</span><br><span class="line">    <span class="keyword">int</span> m = matrix.length, n = matrix[<span class="number">0</span>].length;</span><br><span class="line">    <span class="keyword">int</span> hl=m-<span class="number">1</span>,kr=<span class="number">0</span>,it=n-<span class="number">1</span>,jbo=<span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> posl = <span class="number">0</span>; posl &lt; m; posl++) &#123; <span class="comment">//posl 是左边界 left</span></span><br><span class="line">        <span class="keyword">if</span> (matrix[posl][<span class="number">0</span>] == target) <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        <span class="keyword">if</span> (posl+<span class="number">1</span> &lt; m &amp;&amp; matrix[posl][<span class="number">0</span>] &lt; target &amp;&amp; matrix[posl + <span class="number">1</span>][<span class="number">0</span>] &gt; target) &#123;</span><br><span class="line">            hl = posl;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; </span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> posr = <span class="number">0</span>; posr &lt; m; posr++) &#123; <span class="comment">//posr 是右边界 right</span></span><br><span class="line">        <span class="keyword">if</span> (matrix[posr][n-<span class="number">1</span>] == target) <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        <span class="keyword">if</span> (posr+<span class="number">1</span> &lt; m &amp;&amp; matrix[posr][n-<span class="number">1</span>] &lt; target &amp;&amp; matrix[posr + <span class="number">1</span>][n-<span class="number">1</span>] &gt; target) &#123;</span><br><span class="line">            kr = posr + <span class="number">1</span>;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> post = <span class="number">0</span>; post &lt; n; post++) &#123; <span class="comment">//post 是上边界 top</span></span><br><span class="line">        <span class="keyword">if</span> (matrix[<span class="number">0</span>][post] == target) <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        <span class="keyword">if</span> (post+<span class="number">1</span> &lt; n &amp;&amp; matrix[<span class="number">0</span>][post] &lt; target &amp;&amp; matrix[<span class="number">0</span>][post + <span class="number">1</span>] &gt; target) &#123;</span><br><span class="line">            it = post;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; </span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> posb = <span class="number">0</span>; posb &lt; n; posb++) &#123; <span class="comment">//posb 是下边界 bottom</span></span><br><span class="line">        <span class="keyword">if</span> (matrix[m-<span class="number">1</span>][posb] == target) <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        <span class="keyword">if</span> (posb+<span class="number">1</span> &lt; n &amp;&amp; matrix[m-<span class="number">1</span>][posb] &lt; target &amp;&amp; matrix[m-<span class="number">1</span>][posb + <span class="number">1</span>] &gt; target) &#123;</span><br><span class="line">            jbo = posb+<span class="number">1</span>;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">     <span class="keyword">for</span> (<span class="keyword">int</span> i = kr;i &lt;= hl; i++) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = jbo; j &lt;= it; j++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (matrix[i][j] == target) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="线性查找"><a href="#线性查找" class="headerlink" title="线性查找"></a>线性查找</h4><p>从右上角开始查找，如何target小于<code>matrix(i,j)</code>的值，则往左一行查找，即<code>matrix(i,j-1)</code></p>
+<h4 id="线性查找">线性查找</h4>
+<p>从右上角开始查找，如何target小于<code>matrix(i,j)</code>的值，则往左一行查找，即<code>matrix(i,j-1)</code></p>
 <p>如果target 大于<code>matrix(i,j)</code>的值，往下一行查找，即<code>matrix(i+1,j)</code></p>
 <p>一直循环下去，如果满足直接return true，否则return false。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">findNumberIn2DArray</span><span class="params">(<span class="keyword">int</span>[][] matrix, <span class="keyword">int</span> target)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (matrix == <span class="keyword">null</span> || matrix.length == <span class="number">0</span> || matrix[<span class="number">0</span>].length == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">int</span> rows = matrix.length, columns = matrix[<span class="number">0</span>].length;</span><br><span class="line">        <span class="keyword">int</span> row = <span class="number">0</span>, column = columns - <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">while</span> (row &lt; rows &amp;&amp; column &gt;= <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">int</span> num = matrix[row][column];</span><br><span class="line">            <span class="keyword">if</span> (num == target) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (num &gt; target) &#123;</span><br><span class="line">                column--;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                row++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
       
     </div>
@@ -464,24 +409,6 @@
 
     
 
-    
-      <div>
-        <ul class="post-copyright">
-  <li class="post-copyright-author">
-    <strong>Post author:</strong>
-    Kevin Wang
-  </li>
-  <li class="post-copyright-link">
-    <strong>Post link:</strong>
-    <a href="http://example.com/2021/10/25/%E5%89%91%E6%8C%87offer-T3%EF%BC%9A%E4%BA%8C%E7%BB%B4%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E6%9F%A5%E6%89%BE/" title="剑指offer T3：二维数组中的查找">http://example.com/2021/10/25/%E5%89%91%E6%8C%87offer-T3%EF%BC%9A%E4%BA%8C%E7%BB%B4%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E6%9F%A5%E6%89%BE/</a>
-  </li>
-  <li class="post-copyright-license">
-    <strong>Copyright Notice: </strong>
-    All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> unless stating additionally.
-  </li>
-</ul>
-
-      </div>
     
 
     <footer class="post-footer">
@@ -567,10 +494,10 @@
       
         <ul class="sidebar-nav motion-element">
           <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            Table of Contents
+            文章目录
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            Overview
+            站点概览
           </li>
         </ul>
       
@@ -588,10 +515,10 @@
             
               <div class="site-state-item site-state-posts">
               
-                <a href="/archives/%20%7C%7C%20archive">
+                <a href="/archives">
               
                   <span class="site-state-item-count">51</span>
-                  <span class="site-state-item-name">posts</span>
+                  <span class="site-state-item-name">日志</span>
                 </a>
               </div>
             
@@ -602,9 +529,9 @@
               
               
               <div class="site-state-item site-state-tags">
-                <a href="/tags/index.html">
+                <a href="/tags/index-1.html">
                   <span class="site-state-item-count">19</span>
-                  <span class="site-state-item-name">tags</span>
+                  <span class="site-state-item-name">标签</span>
                 </a>
               </div>
             
@@ -643,7 +570,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%B8%80%EF%BC%9A%E9%81%8D%E5%8E%86%E6%B3%95-%E7%95%A5"><span class="nav-number">1.</span> <span class="nav-text">方法一：遍历法 (略)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%952%EF%BC%9A%E5%AF%B9%E5%AF%B9%E8%A7%92%E5%85%83%E7%B4%A0%E4%B8%8A%E8%BF%9B%E8%A1%8C%E7%AD%9B%E9%80%89%EF%BC%88%E7%95%A5%EF%BC%89"><span class="nav-number">2.</span> <span class="nav-text">方法2：对对角元素上进行筛选（略）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%953%EF%BC%9A%E9%80%9A%E8%BF%87%E5%9B%9B%E4%B8%AA%E8%BE%B9%E7%95%8C%E8%BF%9B%E8%A1%8C%E7%AD%9B%E9%80%89"><span class="nav-number">3.</span> <span class="nav-text">方法3：通过四个边界进行筛选</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BA%BF%E6%80%A7%E6%9F%A5%E6%89%BE"><span class="nav-number">4.</span> <span class="nav-text">线性查找</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%B8%80%E9%81%8D%E5%8E%86%E6%B3%95-%E7%95%A5"><span class="nav-number">1.</span> <span class="nav-text">方法一：遍历法 (略)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%952%E5%AF%B9%E5%AF%B9%E8%A7%92%E5%85%83%E7%B4%A0%E4%B8%8A%E8%BF%9B%E8%A1%8C%E7%AD%9B%E9%80%89%E7%95%A5"><span class="nav-number">2.</span> <span class="nav-text">方法2：对对角元素上进行筛选（略）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%953%E9%80%9A%E8%BF%87%E5%9B%9B%E4%B8%AA%E8%BE%B9%E7%95%8C%E8%BF%9B%E8%A1%8C%E7%AD%9B%E9%80%89"><span class="nav-number">3.</span> <span class="nav-text">方法3：通过四个边界进行筛选</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BA%BF%E6%80%A7%E6%9F%A5%E6%89%BE"><span class="nav-number">4.</span> <span class="nav-text">线性查找</span></a></li></ol></div>
             
 
           </div>
@@ -670,19 +597,10 @@
   <span class="author" itemprop="copyrightHolder">Kevin Wang</span>
 
   
-    <span class="post-meta-divider">|</span>
-    <span class="post-meta-item-icon">
-      <i class="fa fa-area-chart"></i>
-    </span>
-    
-      <span class="post-meta-item-text">Site words total count&#58;</span>
-    
-    <span title="Site words total count"></span>
-  
 </div>
 
 
-  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
 
 
 
@@ -690,7 +608,7 @@
 
 
 
-  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
 
 
 
@@ -789,6 +707,13 @@
 
   
   
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
 
   
   <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
