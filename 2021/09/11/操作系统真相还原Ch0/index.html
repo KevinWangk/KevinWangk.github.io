@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="​">
+<meta property="og:type" content="article">
+<meta property="og:title" content="操作系统真相还原Ch0">
+<meta property="og:url" content="http://example.com/2021/09/11/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9C%9F%E7%9B%B8%E8%BF%98%E5%8E%9FCh0/index.html">
+<meta property="og:site_name" content="Kevin&#39;s Blog">
+<meta property="og:description" content="​">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/p11.png">
+<meta property="og:image" content="http://example.com/p41.png">
+<meta property="article:published_time" content="2021-09-11T08:26:08.000Z">
+<meta property="article:modified_time" content="2021-09-11T08:31:14.000Z">
+<meta property="article:author" content="Kevin Wang">
+<meta property="article:tag" content="操作系统真相还原">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/p11.png">
+
+<link rel="canonical" href="http://example.com/2021/09/11/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9C%9F%E7%9B%B8%E8%BF%98%E5%8E%9FCh0/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>操作系统真相还原Ch0 | Kevin's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Kevin's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/09/11/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9C%9F%E7%9B%B8%E8%BF%98%E5%8E%9FCh0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Kevin Wang">
+      <meta itemprop="description" content="记录生活">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Kevin's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          操作系统真相还原Ch0
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-09-11 16:26:08 / 修改时间：16:31:14" itemprop="dateCreated datePublished" datetime="2021-09-11T16:26:08+08:00">2021-09-11</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>​     </p>
+<span id="more"></span>
+
+<h4 id="访问外部硬件的两个方式"><a href="#访问外部硬件的两个方式" class="headerlink" title="访问外部硬件的两个方式"></a>访问外部硬件的两个方式</h4><ul>
+<li>将某个外设的内存映射到一定范围的地址空间中，CPU通过地址总线访问该内存区域时会落到外设的内存中。例如显卡，CPU不与显示器直接交互，只与显卡通信，显卡上有片内存叫显存，被映射到主机物理内存上，CPU访问这片内存就是访问显存。</li>
+<li>CPU通过IO接口访问外设，IO接口将信息传递给另一端的外设，CPU从来不知道有这些设备的存在。</li>
+</ul>
+<h4 id="CPU如何访问IO接口"><a href="#CPU如何访问IO接口" class="headerlink" title="CPU如何访问IO接口"></a>CPU如何访问IO接口</h4><p>IO接口上有寄存器，访问IO接口本质上就是访问寄存器（端口）。</p>
+<h4 id="用户态与内核态"><a href="#用户态与内核态" class="headerlink" title="用户态与内核态"></a>用户态与内核态</h4><p>用户态（特权3级）和内核态（也称管态，特权0级）是对CPU来讲的。用户进程陷入内核态是指由于内部或外部中断发生，当前进程被暂停终止执行，其上下文被内核的中断程序保存起来，开始执行一段内核的代码。（不是用户程序在内核的代码，用户代码不可能在内核中）。</p>
+<h4 id="内存访问为什么要分段"><a href="#内存访问为什么要分段" class="headerlink" title="内存访问为什么要分段"></a>内存访问为什么要分段</h4><p>首先是为了程序重定位，其次是将大内存分为可以访问的小内存，通过这种方法就能访问到所有内存。</p>
+<h4 id="代码中为什么分为数据段与代码段"><a href="#代码中为什么分为数据段与代码段" class="headerlink" title="代码中为什么分为数据段与代码段"></a>代码中为什么分为数据段与代码段</h4><ul>
+<li>可以为它们赋予不同的属性：数据段可写，代码段只读等</li>
+<li>为了提高CPU内部缓存的命中率，有利于增强程序的局部性</li>
+<li>节省内存，程序的多个副本执行，只需要将只读的代码段共享即可，不需要多个相同的代码段</li>
+</ul>
+<h4 id="全局描述符表（GDT：Global-Descriptor-Table）"><a href="#全局描述符表（GDT：Global-Descriptor-Table）" class="headerlink" title="全局描述符表（GDT：Global Descriptor Table）"></a>全局描述符表（GDT：Global Descriptor Table）</h4><p>表中的每一项成为段描述符，其中包含段的属性位（一个是S–1bit，另外一个是TYPE–4bit），可以指定段的位置，大小及属性</p>
+<h4 id="物理地址-x2F-逻辑地址-x2F-有效地址-x2F-线性地址-x2F-虚拟地址-P11"><a href="#物理地址-x2F-逻辑地址-x2F-有效地址-x2F-线性地址-x2F-虚拟地址-P11" class="headerlink" title="物理地址&#x2F;逻辑地址&#x2F;有效地址&#x2F;线性地址&#x2F;虚拟地址  P11"></a>物理地址&#x2F;逻辑地址&#x2F;有效地址&#x2F;线性地址&#x2F;虚拟地址  P11</h4><ul>
+<li>物理地址就是物理内存中真正的地址</li>
+<li>“<strong>段基址+段内偏移地址</strong>“在实模式下是物理地址，在保护模式下是线性地址（此时段基址是选择子，通过GDT找到真正的段基址），若保护模式下没有开启分页功能，则该线性地址可以当物理地址用，若开启了，则可以称为虚拟地址（虚拟地址与线性地址在分页机制下是一回事，都不是真正的内存地址）</li>
+<li>段内偏移地址被称为有效地址或逻辑地址</li>
+</ul>
+<p><img src="/p11.png" alt="p11"></p>
+<h4 id="平坦模型"><a href="#平坦模型" class="headerlink" title="平坦模型"></a>平坦模型</h4><p>平坦模型是对于多段模型来说的，指的是一个段。例如在实模式下内存是20位（1MB），但是只能访问16位，所以只能通过多个段来访问内存，而对于保护模式下的32位，4GB的内存，段内偏移地址也是地址，一个段就能访问。</p>
+<h4 id="段寄存器（Segment-register"><a href="#段寄存器（Segment-register" class="headerlink" title="段寄存器（Segment register)"></a>段寄存器（Segment register)</h4><ul>
+<li>CS	代码段寄存器 Code Seg Reg：代码段的段基值</li>
+<li>DS  数据段寄存器 Data Seg Reg：数据段的段基值</li>
+<li>ES&#x2F;FS&#x2F;GS  附加段寄存器 Extra Seg Reg：附加数据段的段基值</li>
+<li>SS  堆栈段寄存器 Stack Seg Reg：堆栈段的段值</li>
+</ul>
+<p>在16位的实模式下，CS&#x2F;DS&#x2F;ES&#x2F;SS的值是段基址，是具体的物理地址，内存单元的逻辑地址为”段基址：段内偏移量”。在32位的保护模式下，装入段寄存器的不再是段地址，而是16位宽度的段选择子，所以段寄存器都是16位的。</p>
+<h4 id="堆与栈"><a href="#堆与栈" class="headerlink" title="堆与栈"></a>堆与栈</h4><p>堆是程序运行中用于动态内存分配的内存空间，是操作系统为每个用户进程规划的，属于软件范畴。<br>栈是处理器运行必备的内存空间，是硬件必须的，又由软件提供。<br>堆是堆；堆栈是栈，与堆无关。堆与栈的地址空间相接，栈从高地址向低地址发展，堆从低地址向高地址发展</p>
+<h4 id="大端字节序-x2F-小端字节序"><a href="#大端字节序-x2F-小端字节序" class="headerlink" title="大端字节序&#x2F;小端字节序"></a>大端字节序&#x2F;小端字节序</h4><ul>
+<li>小端字节序是数值的低字节放在内存的低地址处，数值的高字节放在内存的高地址处</li>
+<li>大端字节序是数值的低字节放在内存的高地址处，数值的高字节放在内存的低地址处</li>
+</ul>
+<p>例如：0x12345678 小端字节序：0x78 0x56 0x34 0x12  大端字节序：0x12 0x34 0x56 0x78</p>
+<h4 id="中断向量表（Interrupt-Vector-Table-IVT"><a href="#中断向量表（Interrupt-Vector-Table-IVT" class="headerlink" title="中断向量表（Interrupt Vector Table, IVT)"></a>中断向量表（Interrupt Vector Table, IVT)</h4><p><strong>实模式</strong>下的BIOS&#x2F;DOS通过软中断指令 <code>int 中断号</code>来调用的，IVT中的每个中断向量是4字节，IVT长度1024字节，IVT中的中断例程由BIOS添加。<br><strong>BIOS中断</strong>调用的主要功能是提供了硬件访问的方法，若在某一块内存区域扫描到了硬件，就填写IVT相关项，使之指向硬件自带的例程。IVT中的第0H-1FH是BIOS中断，0x20-0x27是<strong>DOS中断</strong>（只占用0x21），DOS中断可以调用BIOS中断。</p>
+<h4 id="中断描述符表（Interrupt-Descriptor-Table-IDT）"><a href="#中断描述符表（Interrupt-Descriptor-Table-IDT）" class="headerlink" title="中断描述符表（Interrupt Descriptor Table, IDT）"></a>中断描述符表（Interrupt Descriptor Table, IDT）</h4><p>linux内核在进入<strong>保护模式</strong>下才建立中断例程，即<strong>Linux中断</strong>​</p>
+<h4 id="MBR-x2F-EBR-x2F-DBR-x2F-OBR-P41"><a href="#MBR-x2F-EBR-x2F-DBR-x2F-OBR-P41" class="headerlink" title="MBR&#x2F;EBR&#x2F;DBR&#x2F;OBR  P41"></a>MBR&#x2F;EBR&#x2F;DBR&#x2F;OBR  P41</h4><p>计算机接电之后运行BIOS，进行一些简单的初始化检测&#x2F;工作后，将处理器控制权交给MBR（主引导记录：Main Boot Record），MBR位于硬盘最开始的扇区（被称为MBR引导扇区），扇区有64字节大小的分区表（4个分区）里面有次引导程序地址。MBR后面的扇区称为主分区1&#x2F;主分区2…<br>在某个分区里有操作系统，这个分区就是活动分区，MBR知道活动分区有操作系统，每个分区首项最开始的1字节的值只有0x80（活动分区）与0（非活动分区），找到活动分区将控制权交给此分区上的引导程序，通常是内核加载器，其入口在各分区最开始的扇区，”各分区起始的扇区”存放的是操作系统引导记录OBR（OS Boot Record），此扇区也被成为OBR引导扇区，OBR扇区的前3个字节存放了跳转指令。<br>DBR是DOS Boot Record，只有4个分区。<br>EBR是Expand Boot Record（扩展分区），为了解决分区数量限制提出的，位于各子扩展分区中最开始的扇区，其余扇区合成位逻辑分区1&#x2F;逻辑分区2。<br>整个硬盘只有一个MBR，可以有无数个EBR。扇区以0x55和0xaa结束，且分区表只在MBR&#x2F;EBR中，OBR&#x2F;DBR中没有分区表.<img src="/p41.png" alt="p41"></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9C%9F%E7%9B%B8%E8%BF%98%E5%8E%9F/" rel="tag"># 操作系统真相还原</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/09/03/IDEA%E4%B8%AD%E7%9A%84Tomcat%E5%85%B3%E4%BA%8E%E4%B8%8D%E5%90%8C%E9%A1%B9%E7%9B%AE%E7%9A%84%E8%AE%BF%E9%97%AE%E9%93%BE%E6%8E%A5%E9%94%99%E8%AF%AF/" rel="prev" title="IDEA中的Tomcat关于不同项目的访问链接错误">
+      <i class="fa fa-chevron-left"></i> IDEA中的Tomcat关于不同项目的访问链接错误
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/09/15/LeetCode-No3-Longest-Substring-Without-Repeating-Characters/" rel="next" title="LeetCode No3 Longest Substring Without Repeating Characters">
+      LeetCode No3 Longest Substring Without Repeating Characters <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AE%BF%E9%97%AE%E5%A4%96%E9%83%A8%E7%A1%AC%E4%BB%B6%E7%9A%84%E4%B8%A4%E4%B8%AA%E6%96%B9%E5%BC%8F"><span class="nav-number">1.</span> <span class="nav-text">访问外部硬件的两个方式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CPU%E5%A6%82%E4%BD%95%E8%AE%BF%E9%97%AEIO%E6%8E%A5%E5%8F%A3"><span class="nav-number">2.</span> <span class="nav-text">CPU如何访问IO接口</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%94%A8%E6%88%B7%E6%80%81%E4%B8%8E%E5%86%85%E6%A0%B8%E6%80%81"><span class="nav-number">3.</span> <span class="nav-text">用户态与内核态</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%86%85%E5%AD%98%E8%AE%BF%E9%97%AE%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%88%86%E6%AE%B5"><span class="nav-number">4.</span> <span class="nav-text">内存访问为什么要分段</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E4%B8%AD%E4%B8%BA%E4%BB%80%E4%B9%88%E5%88%86%E4%B8%BA%E6%95%B0%E6%8D%AE%E6%AE%B5%E4%B8%8E%E4%BB%A3%E7%A0%81%E6%AE%B5"><span class="nav-number">5.</span> <span class="nav-text">代码中为什么分为数据段与代码段</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%A8%E5%B1%80%E6%8F%8F%E8%BF%B0%E7%AC%A6%E8%A1%A8%EF%BC%88GDT%EF%BC%9AGlobal-Descriptor-Table%EF%BC%89"><span class="nav-number">6.</span> <span class="nav-text">全局描述符表（GDT：Global Descriptor Table）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%89%A9%E7%90%86%E5%9C%B0%E5%9D%80-x2F-%E9%80%BB%E8%BE%91%E5%9C%B0%E5%9D%80-x2F-%E6%9C%89%E6%95%88%E5%9C%B0%E5%9D%80-x2F-%E7%BA%BF%E6%80%A7%E5%9C%B0%E5%9D%80-x2F-%E8%99%9A%E6%8B%9F%E5%9C%B0%E5%9D%80-P11"><span class="nav-number">7.</span> <span class="nav-text">物理地址&#x2F;逻辑地址&#x2F;有效地址&#x2F;线性地址&#x2F;虚拟地址  P11</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B9%B3%E5%9D%A6%E6%A8%A1%E5%9E%8B"><span class="nav-number">8.</span> <span class="nav-text">平坦模型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AE%B5%E5%AF%84%E5%AD%98%E5%99%A8%EF%BC%88Segment-register"><span class="nav-number">9.</span> <span class="nav-text">段寄存器（Segment register)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A0%86%E4%B8%8E%E6%A0%88"><span class="nav-number">10.</span> <span class="nav-text">堆与栈</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%A7%E7%AB%AF%E5%AD%97%E8%8A%82%E5%BA%8F-x2F-%E5%B0%8F%E7%AB%AF%E5%AD%97%E8%8A%82%E5%BA%8F"><span class="nav-number">11.</span> <span class="nav-text">大端字节序&#x2F;小端字节序</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%AD%E6%96%AD%E5%90%91%E9%87%8F%E8%A1%A8%EF%BC%88Interrupt-Vector-Table-IVT"><span class="nav-number">12.</span> <span class="nav-text">中断向量表（Interrupt Vector Table, IVT)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%AD%E6%96%AD%E6%8F%8F%E8%BF%B0%E7%AC%A6%E8%A1%A8%EF%BC%88Interrupt-Descriptor-Table-IDT%EF%BC%89"><span class="nav-number">13.</span> <span class="nav-text">中断描述符表（Interrupt Descriptor Table, IDT）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#MBR-x2F-EBR-x2F-DBR-x2F-OBR-P41"><span class="nav-number">14.</span> <span class="nav-text">MBR&#x2F;EBR&#x2F;DBR&#x2F;OBR  P41</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Kevin Wang</p>
+  <div class="site-description" itemprop="description">记录生活</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">52</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Kevin Wang</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>

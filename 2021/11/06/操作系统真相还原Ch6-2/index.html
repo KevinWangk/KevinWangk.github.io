@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="内联汇编">
+<meta property="og:type" content="article">
+<meta property="og:title" content="操作系统真相还原Ch6-2">
+<meta property="og:url" content="http://example.com/2021/11/06/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9C%9F%E7%9B%B8%E8%BF%98%E5%8E%9FCh6-2/index.html">
+<meta property="og:site_name" content="Kevin&#39;s Blog">
+<meta property="og:description" content="内联汇编">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/1.png">
+<meta property="article:published_time" content="2021-11-06T04:18:34.000Z">
+<meta property="article:modified_time" content="2021-11-06T07:42:58.000Z">
+<meta property="article:author" content="Kevin Wang">
+<meta property="article:tag" content="操作系统真相还原">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/1.png">
+
+<link rel="canonical" href="http://example.com/2021/11/06/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9C%9F%E7%9B%B8%E8%BF%98%E5%8E%9FCh6-2/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>操作系统真相还原Ch6-2 | Kevin's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Kevin's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/11/06/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9C%9F%E7%9B%B8%E8%BF%98%E5%8E%9FCh6-2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Kevin Wang">
+      <meta itemprop="description" content="记录生活">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Kevin's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          操作系统真相还原Ch6-2
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-11-06 12:18:34 / 修改时间：15:42:58" itemprop="dateCreated datePublished" datetime="2021-11-06T12:18:34+08:00">2021-11-06</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>内联汇编</p>
+<span id="more"></span>
+
+<h4 id="AT-amp-T"><a href="#AT-amp-T" class="headerlink" title="AT&amp;T"></a>AT&amp;T</h4><p>Linux内核中的汇编代码一般都是AT&amp;T语法</p>
+<p><img src="/1.png"></p>
+<p>AT&amp;T语法中，如果想要表示内存地址，则什么都不需要加，寄存器前加<code> %</code>，如果想要表示立即数，需要在数字前面加<code>$</code>。</p>
+<p>AT&amp;T内存寻址：base_address(offset_address,index,size) –&gt; base_address+offset_address+index*size</p>
+<ul>
+<li>base_address: 基地址</li>
+<li>offset_address: 偏移地址，index是索引值，这两个必须是8个寄存器之一</li>
+<li>size：长度，只能是1&#x2F;2&#x2F;4&#x2F;8</li>
+</ul>
+<p>寻址方式：</p>
+<ul>
+<li>直接寻址：只有base_address项，如movl $255, 0xc00008F0</li>
+<li>寄存器间接寻址: 只有offset_address项，只能是通用寄存器，格式是(offset_address)，mov  (%eax), %ebx</li>
+<li>寄存器相对寻址：有offset_address和base_address, 格式是base_address(offset_address), movb -4(%ebx) %al，即将地址（ebx-4）所指向的内容复制1字节到寄存器al</li>
+<li>变址寻址：只有index和size就行，也可以有别的</li>
+</ul>
+<h4 id="基本内联汇编"><a href="#基本内联汇编" class="headerlink" title="基本内联汇编"></a>基本内联汇编</h4><p>格式：</p>
+<p><code>asm [volatile] (&quot;assembly code&quot;)</code>，各关键字之间可以用空格或制表符分隔，也可以紧凑一起不分隔</p>
+<p><code>asm 与 _asm_</code>等价，由gcc定义的宏：<code>#define _asm_ asm</code>。</p>
+<p><code>volatile 等价于 _volatile_</code>，可选项，告诉gcc不要修改自己的汇编代码</p>
+<p><code>&quot;assembly code&quot;</code>是写的汇编代码，可以为空，即<code>asm [volatile] (&quot;&quot;)</code>，其规则如下：</p>
+<p>（1）指令必须用双引号引起来，无论双引号中是一条指令或多条指令。<br>（2）一对双引号不能跨行，如果跨行需要在结尾用反斜杠’&#39;转义。<br>（3）指令之间用分号’；’或换行符’\n’或换行符加制表符’\n’’\t’分隔。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">asm(&quot;movl $9,%eax;&quot;&quot;pushl %eax&quot;)　　　　正确</span><br><span class="line">asm(&quot;movl $9,%eax&quot;&quot;pushl %eax&quot;)　　　　 错误</span><br></pre></td></tr></table></figure>
+
+<p>内联汇编中，操作数的顺序与之前相反，mov 源操作数 目的操作数</p>
+<h4 id="拓展内联汇编"><a href="#拓展内联汇编" class="headerlink" title="拓展内联汇编"></a>拓展内联汇编</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">asm [volatile] (&quot;assembly code&quot;:output : input : clobber/modify)</span><br></pre></td></tr></table></figure>
+
+<p><code>input</code>: 输入参数；<code>output</code>: 存储地址</p>
+<p><code>clobber/modify</code>是通知，即如果汇编代码执行后会破坏一些内存或寄存器资源，就会通知编译器</p>
+<p>例子：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">//基本内联汇编</span><br><span class="line">#include&lt;stdio.h&gt;</span><br><span class="line">int in_a = 1, in_b = 2, out_sum;</span><br><span class="line">void main() &#123;	</span><br><span class="line">    asm(&quot; pusha;              　　　　\</span><br><span class="line">    movl in_a, %eax;     　　\</span><br><span class="line">    movl in_b, %ebx;     　　\</span><br><span class="line">    addl %ebx, %eax;    　　\</span><br><span class="line">    movl %eax, out_sum;  　　\</span><br><span class="line">    popa&quot;);</span><br><span class="line">    printf(&quot;sum is %d\n&quot;,out_sum);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//拓展内联汇编</span><br><span class="line">#include&lt;stdio.h&gt;</span><br><span class="line">void main() &#123;</span><br><span class="line">    int in_a = 1, in_b = 2, out_sum;</span><br><span class="line">    asm(&quot;addl %%ebx, %%eax&quot;:&quot;=a&quot;(out_sum):&quot;a&quot;(in_a),&quot;b&quot;(in_b));</span><br><span class="line">    printf(&quot;sum is %d\n&quot;,out_sum);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>in_a和in_b是在input部分中输入的，用约束名a为c变量in_a指定了用寄存器eax，用约束名b为c变量in_b指定了用寄存器ebx。addl指令的结果存放到了寄存器eax中，在output中用约束名a指定了把寄存器eax的值存储到c变量out_sum中。output中的’&#x3D;’号是操作数类型修饰符，表示只写，其实就是out_sum&#x3D;eax的意思。</p>
+<h4 id="机器模式"><a href="#机器模式" class="headerlink" title="机器模式"></a>机器模式</h4><p>寄存器按是否可单独使用，可分成几个部分，拿eax举例： </p>
+<ul>
+<li><p>低部分的一字节：al </p>
+</li>
+<li><p>高部分的一字节：ah </p>
+</li>
+<li><p>两字节部分：ax </p>
+</li>
+<li><p>四字节部分：eax </p>
+</li>
+<li><p>h：输出寄存器高位部分中的那一字节对应的寄存器名称，如ah、bh、ch、dh。 </p>
+</li>
+<li><p>b：输出寄存器中低部分1字节对应的名称，如al、bl、cl、d1。 </p>
+</li>
+<li><p>w：输出寄存器中大小为2个字节对应的部分，如ax、bx、ex、dx。</p>
+</li>
+<li><p>k：输出寄存器的四字节部分，如eax、ebx、ecx、edx。 参考资料</p>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9C%9F%E7%9B%B8%E8%BF%98%E5%8E%9F/" rel="tag"># 操作系统真相还原</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/11/05/MongoDB%E5%9F%BA%E7%A1%80-1/" rel="prev" title="MongoDB基础-1">
+      <i class="fa fa-chevron-left"></i> MongoDB基础-1
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/11/06/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9C%9F%E7%9B%B8%E8%BF%98%E5%8E%9FCh7-1/" rel="next" title="操作系统真相还原Ch7-1">
+      操作系统真相还原Ch7-1 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#AT-amp-T"><span class="nav-number">1.</span> <span class="nav-text">AT&amp;T</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E5%86%85%E8%81%94%E6%B1%87%E7%BC%96"><span class="nav-number">2.</span> <span class="nav-text">基本内联汇编</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8B%93%E5%B1%95%E5%86%85%E8%81%94%E6%B1%87%E7%BC%96"><span class="nav-number">3.</span> <span class="nav-text">拓展内联汇编</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9C%BA%E5%99%A8%E6%A8%A1%E5%BC%8F"><span class="nav-number">4.</span> <span class="nav-text">机器模式</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Kevin Wang</p>
+  <div class="site-description" itemprop="description">记录生活</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">52</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Kevin Wang</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>

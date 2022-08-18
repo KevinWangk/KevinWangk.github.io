@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="加载内核与特权级">
+<meta property="og:type" content="article">
+<meta property="og:title" content="操作系统真相还原Ch5-2">
+<meta property="og:url" content="http://example.com/2021/10/30/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9C%9F%E7%9B%B8%E8%BF%98%E5%8E%9FCh5-2/index.html">
+<meta property="og:site_name" content="Kevin&#39;s Blog">
+<meta property="og:description" content="加载内核与特权级">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/1.png">
+<meta property="og:image" content="http://example.com/2.png">
+<meta property="og:image" content="http://example.com/3.png">
+<meta property="og:image" content="http://example.com/4.png">
+<meta property="og:image" content="http://example.com/5.png">
+<meta property="og:image" content="http://example.com/6.png">
+<meta property="og:image" content="http://example.com/7.png">
+<meta property="og:image" content="http://example.com/8.png">
+<meta property="og:image" content="http://example.com/9.png">
+<meta property="og:image" content="http://example.com/10.png">
+<meta property="og:image" content="http://example.com/11.png">
+<meta property="article:published_time" content="2021-10-30T07:09:07.000Z">
+<meta property="article:modified_time" content="2021-11-04T12:22:44.000Z">
+<meta property="article:author" content="Kevin Wang">
+<meta property="article:tag" content="操作系统真相还原">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/1.png">
+
+<link rel="canonical" href="http://example.com/2021/10/30/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9C%9F%E7%9B%B8%E8%BF%98%E5%8E%9FCh5-2/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>操作系统真相还原Ch5-2 | Kevin's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Kevin's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/10/30/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9C%9F%E7%9B%B8%E8%BF%98%E5%8E%9FCh5-2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Kevin Wang">
+      <meta itemprop="description" content="记录生活">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Kevin's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          操作系统真相还原Ch5-2
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-10-30 15:09:07" itemprop="dateCreated datePublished" datetime="2021-10-30T15:09:07+08:00">2021-10-30</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-11-04 20:22:44" itemprop="dateModified" datetime="2021-11-04T20:22:44+08:00">2021-11-04</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>加载内核与特权级</p>
+<span id="more"></span>
+
+<h4 id="加载内核"><a href="#加载内核" class="headerlink" title="加载内核"></a>加载内核</h4><p>生成C语言程序的过程是这样的。先将源程序编译成目标文件（由c代码变成汇编代码后，再由汇编代码生成二进制的目标文件（待重定位文件）），再将目标文件链接成二进制可执行文件</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">% 位于kernel/main.c</span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">    <span class="keyword">while</span>(<span class="number">1</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line">% gcc编译该程序的参数：gcc -c -o kernel/main.o kernel/main.c</span><br><span class="line">% -c的作用是编译、汇编到目标代码，不进行链接，也就是直接生成目标文件。</span><br><span class="line">% -o的作用是将输出的文件以指定文件名来存储，有同名文件存在时直接覆盖。</span><br><span class="line">% ld kernel/main.o -Ttext <span class="number">0xc0001500</span> -e main -o kernel/kernel.bin</span><br><span class="line">% -Ttext 指定起始虚拟地址为<span class="number">0xc0001500</span></span><br><span class="line">% -e指定程序入口</span><br></pre></td></tr></table></figure>
+
+<p>每个程序都是单独存在的，所以需要程序的入口地址信息与程序绑定，在原先的纯二进制可执行文件加上新的文件头，就形成了。gcc编译器生成的是elf文件格式（Executable and Linkable Format），可执行链接格式，该文件可直接运行。</p>
+<p><img src="/1.png"></p>
+<p><img src="/2.png"></p>
+<p>程序中有段segment（数据段、代码段）和节section组成，多个节经过链接被合并成一个段，段和节的信息也是用header描述，程序头是program header、节头是section header。</p>
+<p>使用程序头表和节头表来汇总程序头和节头，段相当于程序，所以将描述段信息的表说成program header table，通过ELF header来描述程序头表和节头表的大小及位置信息</p>
+<p><img src="/3.png"></p>
+<p>ELF header中的数据类型</p>
+<p><img src="/4.png"></p>
+<p>elf header 结构</p>
+<p><img src="/5.png"></p>
+<p>program header结构</p>
+<p><img src="/6.png"></p>
+<p>将<code>kernel/kernel.bin</code>写入磁盘<code>dd if=/root/bochs-2.7/kernel/kernel.bin of=/root/bochs-2.7/hd60M.img bs=512 count=200 seek=9 conv=notrunc</code>，从第9个扇区开始写，写入200个</p>
+<p>loader.S添加两项：</p>
+<ul>
+<li>加载内核，把内核文件加载到内存缓冲区</li>
+<li>初始化内核，需要在分页后，将加载进来的elf内核文件安置到相应的虚拟内存地址，然后跳过去执行，loader的工作结束</li>
+</ul>
+<p>内核在内存中有两份拷贝：一份是elf格式的原文件kernel.bin，加载到高地址；另一份是loader解析elf格式的kernel.bin后在内存中生成的内核映像，即真正运行的内核，加载到低地址。</p>
+<p><code>loader.S</code>详细代码：<a target="_blank" rel="noopener" href="https://github.com/fuujiro/OS_lab/blob/master/code/c5/c/boot/loader.S">https://github.com/fuujiro/OS_lab/blob/master/code/c5/c/boot/loader.S</a></p>
+<p>加载kernel，将其写入内存中</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line">   ;在开启分页后,用gdt新的地址重新加载</span><br><span class="line">   lgdt [gdt_ptr]             ; 重新加载</span><br><span class="line"></span><br><span class="line">;;;;;;;;;;;;;;;;;;;;;;;;;;;;  此时不刷新流水线也没问题  ;;;;;;;;;;;;;;;;;;;;;;;;</span><br><span class="line">;由于一直处在32位下,原则上不需要强制刷新,经过实际测试没有以下这两句也没问题.</span><br><span class="line">;但以防万一，还是加上啦，免得将来出来莫句奇妙的问题.</span><br><span class="line">   jmp SELECTOR_CODE:enter_kernel	  ;强制刷新流水线,更新gdt</span><br><span class="line">enter_kernel:    </span><br><span class="line">;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;</span><br><span class="line">   call kernel_init</span><br><span class="line">   mov esp, 0xc009f000			;为了对齐4kb整页，栈底</span><br><span class="line">   jmp KERNEL_ENTRY_POINT                 ; 用地址0x1500访问测试，结果ok</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">;-----------------   将kernel.bin中的segment拷贝到编译的地址   -----------</span><br><span class="line">kernel_init: 		;将kernel.bin中的段拷贝到各段自己被编译的虚拟地址处，将这些段单独提取到内存中</span><br><span class="line">   xor eax, eax</span><br><span class="line">   xor ebx, ebx		;ebx记录程序头表地址</span><br><span class="line">   xor ecx, ecx		;cx记录程序头表中的program header数量</span><br><span class="line">   xor edx, edx		;dx 记录program header尺寸,即e_phentsize</span><br><span class="line"></span><br><span class="line">   mov dx, [KERNEL_BIN_BASE_ADDR + 42]	  ; 偏移文件42字节处的属性是e_phentsize,表示program header段头大小</span><br><span class="line">   mov ebx, [KERNEL_BIN_BASE_ADDR + 28]   ; 偏移文件开始部分28字节的地方是e_phoff,表示第1 个program header在文件中的偏移量，程序头表在文件中的偏移量</span><br><span class="line">					  ; 其实该值是0x34,不过还是谨慎一点，这里来读取实际值</span><br><span class="line">   add ebx, KERNEL_BIN_BASE_ADDR		;程序头表的物理地址，作为程序头表的基址</span><br><span class="line">   mov cx, [KERNEL_BIN_BASE_ADDR + 44]    ; 偏移文件开始部分44字节的地方是e_phnum,表示有几个program header，即程序头的数量</span><br><span class="line">.each_segment:</span><br><span class="line">   cmp byte [ebx + 0], PT_NULL		  ; 若p_type等于 PT_NULL,说明此program header未使用。</span><br><span class="line">   je .PTNULL</span><br><span class="line"></span><br><span class="line">   ; 程序中的段通过mem_cpy函数复制到段自身的虚拟地址处</span><br><span class="line">   ;为函数memcpy压入参数,参数是从右往左依然压入.函数原型类似于 memcpy(dst,src,size)</span><br><span class="line">   push dword [ebx + 16]		  ; program header中偏移16字节的地方是p_filesz,压入函数memcpy的第三个参数:size</span><br><span class="line">   mov eax, [ebx + 4]			  ; 距程序头偏移量为4字节的位置是p_offset</span><br><span class="line">   add eax, KERNEL_BIN_BASE_ADDR	  ; 加上kernel.bin被加载到的物理地址,eax为该段的物理地址</span><br><span class="line">   push eax				  ; 压入函数memcpy的第二个参数:源地址</span><br><span class="line">   push dword [ebx + 8]			  ; 压入函数memcpy的第一个参数:目的地址,偏移程序头8字节的位置是p_vaddr，这就是目的地址</span><br><span class="line">   call mem_cpy				  ; 调用mem_cpy完成段复制</span><br><span class="line">   add esp,12				  ; 清理栈中压入的三个参数</span><br><span class="line">.PTNULL:</span><br><span class="line">   add ebx, edx				  ; edx为program header大小,即e_phentsize,在此ebx指向下一个program header </span><br><span class="line">   loop .each_segment</span><br><span class="line">   ret</span><br><span class="line"></span><br><span class="line">;----------  逐字节拷贝 mem_cpy(dst,src,size) ------------</span><br><span class="line">;输入:栈中三个参数(dst,src,size)</span><br><span class="line">;输出:无</span><br><span class="line">;---------------------------------------------------------</span><br><span class="line">mem_cpy:		      </span><br><span class="line">   cld				;用于清除方向标志，让数据的源地址和目的地址逐渐增大</span><br><span class="line">   push ebp</span><br><span class="line">   mov ebp, esp</span><br><span class="line">   push ecx		   ; rep指令用到了ecx，但ecx对于外层段的循环还有用，故先入栈备份</span><br><span class="line">   mov edi, [ebp + 8]	   ; dst</span><br><span class="line">   mov esi, [ebp + 12]	   ; src</span><br><span class="line">   mov ecx, [ebp + 16]	   ; size</span><br><span class="line">   rep movsb		   ; 逐字节拷贝，repeat，每执行一次，ecx减1，直到ecx=0</span><br><span class="line">   ;movs=move string,后面的b-byte-1字节,w-word-2字节,d-dword-4字节</span><br><span class="line">   ;恢复环境</span><br><span class="line">   pop ecx		</span><br><span class="line">   pop ebp</span><br><span class="line">   ret</span><br></pre></td></tr></table></figure>
+
+
+
+<p><img src="/7.png"></p>
+<p>文件0x500-0x9fbff内存布局：</p>
+<p><img src="/8.png"></p>
+<h4 id="特权级"><a href="#特权级" class="headerlink" title="特权级"></a>特权级</h4><h5 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h5><p>对象可以分为两部分：访问者和受访者。访问者是动态的，具有能动性，特权级可以变，主动访问资源；受访者是静态的，是被访问的资源，特权级不能变。</p>
+<p>建立特权机制就是通过特权来检查合法性，实际上就是检查访问者的特权级和受访者的特权级是否匹配。</p>
+<p>特权级分为四个级别：0-1-2-3，数字越大，特权能力越大，0级最大。0级是操作系统内核所在的特权级。</p>
+<p><img src="/9.png"></p>
+<p>1级与2级一般是虚拟机、驱动程序；低3级一般是用户程序。</p>
+<h5 id="TSS"><a href="#TSS" class="headerlink" title="TSS"></a>TSS</h5><p>TSS即Task State Segment，任务状态段，用于存储任务的环境。</p>
+<p><img src="/10.png"></p>
+<p>处理器在不同的特权级下使用不同的段。TSS只有3个栈：</p>
+<ul>
+<li>SS0–esp0:0级段选择子和偏移量</li>
+<li>SS1–esp1</li>
+<li>SS2–esp2</li>
+</ul>
+<p>特权级转移分为两类，一类是由中断门、调用门等手段实现低特权级转向高特权级，另一类则相反，是由调用返回指令从高特权级返回到低特权级，</p>
+<p>TSS记录的栈是转移后的高特权级目标栈，所以不需要记录3级特权级的栈。正常情况下，特权级由低向高转移在先，高向低返回在后。当处理器由低向高特权级转移时，它自动地把当时低特权级的栈地址（SS和ESP）压入了转移后的高特权级所在的栈中。</p>
+<p>TSS是硬件支持的系统数据结构，由TR寄存器（task register）加载。</p>
+<h5 id="CPL和DPL"><a href="#CPL和DPL" class="headerlink" title="CPL和DPL"></a>CPL和DPL</h5><p>基本概念：</p>
+<ul>
+<li>DPL：段描述符特权级，表示代码段的特权级</li>
+<li>RPL：全局描述符表的段寄存器的低2位，即段选择子的0-1位，也是请求特权级</li>
+<li>CPL：Current Privilege level，当前CPU的特权级，保存在CS选择子中的RPL部分</li>
+</ul>
+<p>处理器在访问者访问受访者时进行特权检查，访问者的特权就是当前特权级CPL。访问者任何时候都不允许访问比自己特权更高的资源，对于受访者是数据段来说，只有比他高或者平级才能访问，但是对于受访者是代码段来说，只能平级访问。唯一一种处理器会从高特权级降到低特权运行的情况：处理器从中断处理程序中返回到用户态中。</p>
+<h5 id="一致性代码段"><a href="#一致性代码段" class="headerlink" title="一致性代码段"></a>一致性代码段</h5><p>可以执行高特权级代码段上的指令又不提升特权级，也叫依从代码段，如果自己是转移后的代码段，自己的特权级DPL一定要大于转移前的CPL。</p>
+<p>特权级检查发生在访问者访问受访者的一瞬间，只检查一次，所有的数据段是非一致的，即数据段不允许比本数据段特权级更低的代码段访问。</p>
+<h5 id="调用门"><a href="#调用门" class="headerlink" title="调用门"></a>调用门</h5><p>处理器只有通过门结构才能由低特权级转到高特权级，门就是记录一段程序起始地址的描述符。</p>
+<p>四种门：</p>
+<ul>
+<li>任务门：call、jmp</li>
+<li>中断门：int</li>
+<li>陷阱门：int3</li>
+<li>调用门：call向高，平特权级转移、jmp平级</li>
+</ul>
+<p>除任务门外，其他三种门都是对应一段例程即一段函数，而不是内存区域。中断门和陷阱门仅位于IDT（中断描述符表）中，任务门可以位于GDT、LDT、IDT，调用门位于GDT、LDT，无论哪种门，他们记录的信息都已经可以确定所描述的对象</p>
+<p><img src="/11.png"></p>
+<p>特权级检查：32位保护模式下对内存的访问要通过段描述符，段描述符中有DPL，处理器的特权检查，都只发生在往段寄存器中加载选择子访问描述符的那一瞬间。</p>
+<p>对于受访者是代码段时：</p>
+<p>如果目标为非一致性代码段，要求：<br>数值上CPL&#x3D;RPL&#x3D;目标代码段DPL<br>如果目标为一致性代码段，要求：<br>数值上（CPL≥目标代码段DPL &amp;&amp; RPL≥目标代码段DPL）</p>
+<p>对于受访者为数据段时：<br>数值上（CPL ≤目标数据段DPL &amp;&amp; RPL ≤ 目标数据段DPL）</p>
+<p>栈的特权级要和CPL相同，所以往段寄存器SS中赋予数据段选择子时，处理器要求CPL等于栈段选择子对应的数据段的DPL，即数值上CPL &#x3D; RPL &#x3D; 用作栈的目标数据段DPL。</p>
+<p>进入0特权级后，CPL是指代理人，即内核，RPL则有可能是委托者，即用户程序，也有可能是内核自己。</p>
+<p>调用门本身是个描述符，所以它有一个DPL，记作DPL_GATE，下限，程序所在的代码段本身也有DPL，记作DPL_CODE，上限，调用门会涉及这两个DPL的特权检查。</p>
+<p>对于门来说，处理器在检查特权级时：<br>（1）要求CPL和RPL在DPL_GATE和DPL_CODE之间。<br>（2）RPL只用在进调用门时和DPL_GATE比较一次，不参与和DPL_CODE比较。</p>
+<p>门描述符中选择子的RPL不参与特权级检查，选择子仅仅是用来指向目标程序所在的代码段的。</p>
+<h4 id="看不下去了"><a href="#看不下去了" class="headerlink" title="看不下去了"></a>看不下去了</h4><p>后面略，看的头都大了，出去锻炼。</p>
+<p>脚本：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line">nasm -I include/ -o mbr.bin mbr.S &amp;&amp; \</span><br><span class="line">nasm -I include/ -o loader.bin loader.S &amp;&amp; \</span><br><span class="line">gcc -m32 -c -o ./kernel/main.o ./kernel/main.c &amp;&amp; \</span><br><span class="line">ld ./kernel/main.o -N -Ttext=0xc0001500 -e main -m elf_i386 -o ./kernel/kernel.bin &amp;&amp; \</span><br><span class="line">dd if=/root/bochs-2.7/mbr.bin of=/root/bochs-2.7/hd60M.img bs=512 count=1 conv=notrunc &amp;&amp; \</span><br><span class="line">dd if=/root/bochs-2.7/loader.bin of=/root/bochs-2.7/hd60M.img bs=512 count=4 seek=2 conv=notrunc &amp;&amp; \</span><br><span class="line">dd if=/root/bochs-2.7/kernel/kernel.bin of=/root/bochs-2.7/hd60M.img bs=512 count=200 seek=9 conv=notrunc</span><br></pre></td></tr></table></figure>
+
+<p>Shell命令行：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">nasm -I include/ -o mbr.bin mbr.S</span><br><span class="line">nasm -I include/ -o loader.bin loader.S</span><br><span class="line">gcc -m32 -c -o ./kernel/main.o ./kernel/main.c</span><br><span class="line"></span><br><span class="line">ld ./kernel/main.o -N -Ttext=0xc0001500 -e main -m elf_i386 -o ./kernel/kernel.bin</span><br><span class="line"></span><br><span class="line">dd if=/root/bochs-2.7/mbr.bin of=/root/bochs-2.7/hd60M.img bs=512 count=1 conv=notrunc</span><br><span class="line">dd if=/root/bochs-2.7/loader.bin of=/root/bochs-2.7/hd60M.img bs=512 count=4 seek=2 conv=notrunc</span><br><span class="line">dd if=/root/bochs-2.7/kernel/kernel.bin of=/root/bochs-2.7/hd60M.img bs=512 count=200 seek=9 conv=notrunc</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9C%9F%E7%9B%B8%E8%BF%98%E5%8E%9F/" rel="tag"># 操作系统真相还原</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/10/29/MyBatis%E5%9F%BA%E7%A1%803/" rel="prev" title="MyBatis基础3">
+      <i class="fa fa-chevron-left"></i> MyBatis基础3
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/11/02/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9C%9F%E7%9B%B8%E8%BF%98%E5%8E%9FCh6-1/" rel="next" title="操作系统真相还原Ch6-1">
+      操作系统真相还原Ch6-1 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8A%A0%E8%BD%BD%E5%86%85%E6%A0%B8"><span class="nav-number">1.</span> <span class="nav-text">加载内核</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%89%B9%E6%9D%83%E7%BA%A7"><span class="nav-number">2.</span> <span class="nav-text">特权级</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B"><span class="nav-number">2.1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#TSS"><span class="nav-number">2.2.</span> <span class="nav-text">TSS</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#CPL%E5%92%8CDPL"><span class="nav-number">2.3.</span> <span class="nav-text">CPL和DPL</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%B8%80%E8%87%B4%E6%80%A7%E4%BB%A3%E7%A0%81%E6%AE%B5"><span class="nav-number">2.4.</span> <span class="nav-text">一致性代码段</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%B0%83%E7%94%A8%E9%97%A8"><span class="nav-number">2.5.</span> <span class="nav-text">调用门</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%9C%8B%E4%B8%8D%E4%B8%8B%E5%8E%BB%E4%BA%86"><span class="nav-number">3.</span> <span class="nav-text">看不下去了</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Kevin Wang</p>
+  <div class="site-description" itemprop="description">记录生活</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">52</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Kevin Wang</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>

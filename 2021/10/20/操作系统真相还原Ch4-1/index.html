@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="保护模式入门">
+<meta property="og:type" content="article">
+<meta property="og:title" content="操作系统真相还原Ch4-1">
+<meta property="og:url" content="http://example.com/2021/10/20/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9C%9F%E7%9B%B8%E8%BF%98%E5%8E%9FCh4-1/index.html">
+<meta property="og:site_name" content="Kevin&#39;s Blog">
+<meta property="og:description" content="保护模式入门">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/1.png">
+<meta property="og:image" content="http://example.com/2.png">
+<meta property="og:image" content="http://example.com/3.png">
+<meta property="og:image" content="http://example.com/4.png">
+<meta property="og:image" content="http://example.com/5.png">
+<meta property="og:image" content="http://example.com/6.png">
+<meta property="og:image" content="http://example.com/7.png">
+<meta property="og:image" content="http://example.com/8.png">
+<meta property="article:published_time" content="2021-10-20T11:12:20.000Z">
+<meta property="article:modified_time" content="2021-10-23T03:20:14.000Z">
+<meta property="article:author" content="Kevin Wang">
+<meta property="article:tag" content="操作系统真相还原">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/1.png">
+
+<link rel="canonical" href="http://example.com/2021/10/20/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9C%9F%E7%9B%B8%E8%BF%98%E5%8E%9FCh4-1/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>操作系统真相还原Ch4-1 | Kevin's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Kevin's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/10/20/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9C%9F%E7%9B%B8%E8%BF%98%E5%8E%9FCh4-1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Kevin Wang">
+      <meta itemprop="description" content="记录生活">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Kevin's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          操作系统真相还原Ch4-1
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-10-20 19:12:20" itemprop="dateCreated datePublished" datetime="2021-10-20T19:12:20+08:00">2021-10-20</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-10-23 11:20:14" itemprop="dateModified" datetime="2021-10-23T11:20:14+08:00">2021-10-23</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>保护模式入门</p>
+<span id="more"></span>
+
+<p>地址转换是由处理器和操作系统共同协作完成的，处理器在硬件上提供地址转换部件，操作系统提供转换过程中所需要的页表。</p>
+<h3 id="保护模式概述"><a href="#保护模式概述" class="headerlink" title="保护模式概述"></a>保护模式概述</h3><h4 id="寄存器拓展"><a href="#寄存器拓展" class="headerlink" title="寄存器拓展"></a>寄存器拓展</h4><p>实模式的CPU运行环境是16位，保护模式的运行环境是32位的。为了寻址4GB的内存空间（段基址：段内偏移地址），将除了段寄存器（16位够用）之外的寄存器（通用寄存器，指令指针寄存器，标志寄存器都变为32位）。</p>
+<p><img src="/1.png" alt="1"></p>
+<p>在保护模式下，段基址与实模式不同，为了安全，添加了一些约束条件——对内存段的描述信息，由于信息太多，寄存器无法存放，所以使用全局描述符表（大）来存放。表中的每一个表项称为段描述符，大小为64字节，用来描述各个内存段的起始地址、大小、权限等信息，放在内存里面，由GDTR寄存器指向它。</p>
+<p>段寄存器保存的不再是段基址，而是选择子，selector（其实就是一个数，用这个数来索引全局描述符表的段描述符（在内存中），就像数组的下标），段描述符缓冲寄存器用来缓存内存中的段描述符。</p>
+<h4 id="寻址拓展"><a href="#寻址拓展" class="headerlink" title="寻址拓展"></a>寻址拓展</h4><p><img src="/2.png" alt="2"></p>
+<h4 id="指令拓展"><a href="#指令拓展" class="headerlink" title="指令拓展"></a>指令拓展</h4><p><img src="/3.png" alt="3"></p>
+<p><img src="/4.png" alt="4"></p>
+<p><img src="/5.png" alt="5"></p>
+<p>对于段寄存器的入栈（cs&#x2F;ds&#x2F;es&#x2F;fs&#x2F;gs&#x2F;ss），16位模式下压入2字节，32位模式下压入4字节。对于通用寄存器和内存，无论是在实模式或者保护模式下，如果压入的是16位的数据，栈指针减2；如果压入的是32位的数据，栈指针减4.</p>
+<h3 id="全局描述符表"><a href="#全局描述符表" class="headerlink" title="全局描述符表"></a>全局描述符表</h3><h4 id="段描述符"><a href="#段描述符" class="headerlink" title="段描述符"></a>段描述符</h4><p>段描述符是连续的8字节大小，保护模式下，地址总线宽度是32位，所以段基址需要用32位地址表示。段界限（20个二进制位表示）表示段边界的拓展最值，即最大或最小拓展到多少，方向只有向上或向下，对于代码段和数据段，段的拓展是向上，即地址越来越高，表示段内偏移的最大值；对于栈段，拓展方向是向下，此时表示段内偏移地址的最小值。段界限只是单位量，单位是字节或者是4kb，由描述符中的G来指定，所以段的大小只能为2的20次方&#x3D;1MB或者2的32次方&#x3D;4GB，因为计算机从0开始，所以实际的段界限边界值&#x3D;（描述符中的段界限+1）*（段界限力粒度4kb或1b）-1。</p>
+<p><img src="/6.png" alt="6"></p>
+<p>若G处为0，则段界限单位为1B，G处为1，则单位为4KB字节。</p>
+<p>对于高32位处，第12位是显示是否为系统段。凡是在硬件运行需要的东西成为系统，称为系统段为0，软件（包括操作系统）需要的称为数据段为1（代码段在段描述符中也属于数据段）8-11是type字段，用来指定本描述符的类型</p>
+<p><img src="/7.png" alt="7"></p>
+<p><img src="/8.png" alt="8"></p>
+<p>表中的A位表示Accessed位，由CPU设置，每当该段被CPU访问过就设置为1。C是一致性代码段，指如果自己是转移的目标段，并且是一致性代码段，则自己的特权级一定高于当前特权级。E表示拓展方向，0表示向上，1表示向下。</p>
+<p>段描述符中的第13-14位是DPL字段，Descriptor Privilege Level，描述符特权级，分为0-1-2-3级特权，数字越小特权级越大。第15位是P字段，Present，即段是否存在，如果段存在与内存中，P为1，否则为0。第20位为AvaiLable，可用，对操作系统无效；第21位L字段，是否是64位代码段，对要实现的操作系统无效（32位）。</p>
+<p>第22位是D&#x2F;B字段，指定操作数和有效地址的大小（为了兼容16位），对于代码段是D字段，0-16-使用IP寄存器，1-32-使用EIP寄存器；对于栈段，此为B，0-16-sp寄存器，1-32-esp寄存器</p>
+<h4 id="全局描述符表GDT"><a href="#全局描述符表GDT" class="headerlink" title="全局描述符表GDT"></a>全局描述符表GDT</h4><p>多个程序都可以在里面定义自己的段描述符，由GDTR（GDT Register）寄存器（48位，存储内存地址 32位及大小16位）指向GDT，使用lgdt指令访问，每个描述符大小8字节，GDT最多有8192个段或门。使用选择子selector（16位）访问GDT某个特定的地址，相当于索引，第0-1位用来存储4个特权级，第2位是TI位，Table Indicator，用来表示选择子在GDT还是LDT（局部描述符表Local，lldt指令，很少用）中，选择子索引部分13位，正好是8192个。</p>
+<p>进入保护模式后，已经是32位地址线和32位寄存器，故段基址不需要再乘16了，直接与段内偏移地址相加即可。</p>
+<p>CR0寄存器的PE位，即第0位是保护模式的开关，若为0则代表在实模式下，1代表保护模式下运行。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9C%9F%E7%9B%B8%E8%BF%98%E5%8E%9F/" rel="tag"># 操作系统真相还原</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/10/20/%E4%BA%8C%E5%88%86%E7%B1%BB%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87AUROC-AUPRC/" rel="prev" title="二分类评价指标AUROC/AUPRC">
+      <i class="fa fa-chevron-left"></i> 二分类评价指标AUROC/AUPRC
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/10/21/MVCC%E5%8F%AF%E9%87%8D%E5%A4%8D%E8%AF%BB/" rel="next" title="MVCC可重复读">
+      MVCC可重复读 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%9D%E6%8A%A4%E6%A8%A1%E5%BC%8F%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">保护模式概述</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AF%84%E5%AD%98%E5%99%A8%E6%8B%93%E5%B1%95"><span class="nav-number">1.1.</span> <span class="nav-text">寄存器拓展</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AF%BB%E5%9D%80%E6%8B%93%E5%B1%95"><span class="nav-number">1.2.</span> <span class="nav-text">寻址拓展</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8C%87%E4%BB%A4%E6%8B%93%E5%B1%95"><span class="nav-number">1.3.</span> <span class="nav-text">指令拓展</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%A8%E5%B1%80%E6%8F%8F%E8%BF%B0%E7%AC%A6%E8%A1%A8"><span class="nav-number">2.</span> <span class="nav-text">全局描述符表</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AE%B5%E6%8F%8F%E8%BF%B0%E7%AC%A6"><span class="nav-number">2.1.</span> <span class="nav-text">段描述符</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%A8%E5%B1%80%E6%8F%8F%E8%BF%B0%E7%AC%A6%E8%A1%A8GDT"><span class="nav-number">2.2.</span> <span class="nav-text">全局描述符表GDT</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Kevin Wang</p>
+  <div class="site-description" itemprop="description">记录生活</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">52</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Kevin Wang</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>

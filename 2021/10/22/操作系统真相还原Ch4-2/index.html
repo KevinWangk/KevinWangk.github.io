@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="进入保护模式">
+<meta property="og:type" content="article">
+<meta property="og:title" content="操作系统真相还原Ch4-2">
+<meta property="og:url" content="http://example.com/2021/10/22/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9C%9F%E7%9B%B8%E8%BF%98%E5%8E%9FCh4-2/index.html">
+<meta property="og:site_name" content="Kevin&#39;s Blog">
+<meta property="og:description" content="进入保护模式">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/6.png">
+<meta property="og:image" content="http://example.com/7.png">
+<meta property="og:image" content="http://example.com/8.png">
+<meta property="og:image" content="http://example.com/9.png">
+<meta property="article:published_time" content="2021-10-22T05:07:25.000Z">
+<meta property="article:modified_time" content="2021-10-23T03:20:36.000Z">
+<meta property="article:author" content="Kevin Wang">
+<meta property="article:tag" content="操作系统真相还原">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/6.png">
+
+<link rel="canonical" href="http://example.com/2021/10/22/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9C%9F%E7%9B%B8%E8%BF%98%E5%8E%9FCh4-2/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>操作系统真相还原Ch4-2 | Kevin's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Kevin's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/10/22/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9C%9F%E7%9B%B8%E8%BF%98%E5%8E%9FCh4-2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Kevin Wang">
+      <meta itemprop="description" content="记录生活">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Kevin's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          操作系统真相还原Ch4-2
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-10-22 13:07:25" itemprop="dateCreated datePublished" datetime="2021-10-22T13:07:25+08:00">2021-10-22</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-10-23 11:20:36" itemprop="dateModified" datetime="2021-10-23T11:20:36+08:00">2021-10-23</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="进入保护模式"><a href="#进入保护模式" class="headerlink" title="进入保护模式"></a>进入保护模式</h3><span id="more"></span>
+
+<p>保护模式是在<code>loader.bin</code>中进入的，除了要更新<code>loader.S</code>之外，还应该更新两个文件：<code>mbr.S</code>和<code>include/boot.inc</code></p>
+<p>由于<code>loader.bin</code>超过了512字节，所以要把<code>mbr.S</code>中加载<code>loader.bin</code>（<code>loader.bin</code>由<code>mbr.bin</code>中的函数<code>rd_disk_m_16</code>读入）的读入扇区增大，由1扇区增加到4扇区，待读入的扇区数（cx）应该大于<code>loader.bin</code>的大小</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">;在mbr.S中修改</span><br><span class="line">mov cx,4			;待读入的扇区数</span><br><span class="line">call rd_disk_m_16	;函数调用，以下读取程序的起始部分</span><br></pre></td></tr></table></figure>
+
+<p><code>mbr.S</code>完整程序代码</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br></pre></td><td class="code"><pre><span class="line">;主引导程序 </span><br><span class="line">;------------------------------------------------------------</span><br><span class="line">%include &quot;boot.inc&quot;</span><br><span class="line">SECTION MBR vstart=0x7c00         </span><br><span class="line">   mov ax,cs      </span><br><span class="line">   mov ds,ax</span><br><span class="line">   mov es,ax</span><br><span class="line">   mov ss,ax</span><br><span class="line">   mov fs,ax</span><br><span class="line">   mov sp,0x7c00</span><br><span class="line">   mov ax,0xb800</span><br><span class="line">   mov gs,ax</span><br><span class="line"></span><br><span class="line">; 清屏</span><br><span class="line">;利用0x06号功能，上卷全部行，则可清屏。</span><br><span class="line">; -----------------------------------------------------------</span><br><span class="line">;INT 0x10   功能号:0x06	   功能描述:上卷窗口</span><br><span class="line">;------------------------------------------------------</span><br><span class="line">;输入：</span><br><span class="line">;AH 功能号= 0x06</span><br><span class="line">;AL = 上卷的行数(如果为0,表示全部)</span><br><span class="line">;BH = 上卷行属性</span><br><span class="line">;(CL,CH) = 窗口左上角的(X,Y)位置</span><br><span class="line">;(DL,DH) = 窗口右下角的(X,Y)位置</span><br><span class="line">;无返回值：</span><br><span class="line">   mov     ax, 0600h</span><br><span class="line">   mov     bx, 0700h</span><br><span class="line">   mov     cx, 0                   ; 左上角: (0, 0)</span><br><span class="line">   mov     dx, 184fh		   ; 右下角: (80,25),</span><br><span class="line">				   ; 因为VGA文本模式中，一行只能容纳80个字符,共25行。</span><br><span class="line">				   ; 下标从0开始，所以0x18=24,0x4f=79</span><br><span class="line">   int     10h                     ; int 10h</span><br><span class="line"></span><br><span class="line">   ; 输出字符串:MBR</span><br><span class="line">   mov byte [gs:0x00],&#x27;1&#x27;</span><br><span class="line">   mov byte [gs:0x01],0xA4</span><br><span class="line"></span><br><span class="line">   mov byte [gs:0x02],&#x27; &#x27;</span><br><span class="line">   mov byte [gs:0x03],0xA4</span><br><span class="line"></span><br><span class="line">   mov byte [gs:0x04],&#x27;M&#x27;</span><br><span class="line">   mov byte [gs:0x05],0xA4	   ;A表示绿色背景闪烁，4表示前景色为红色</span><br><span class="line"></span><br><span class="line">   mov byte [gs:0x06],&#x27;B&#x27;</span><br><span class="line">   mov byte [gs:0x07],0xA4</span><br><span class="line"></span><br><span class="line">   mov byte [gs:0x08],&#x27;R&#x27;</span><br><span class="line">   mov byte [gs:0x09],0xA4</span><br><span class="line">	 </span><br><span class="line">   mov eax,LOADER_START_SECTOR	 ; 起始扇区lba地址</span><br><span class="line">   mov bx,LOADER_BASE_ADDR       ; 写入的地址</span><br><span class="line">   mov cx,4			 ; 待读入的扇区数,上面提到要修改的地方</span><br><span class="line">   call rd_disk_m_16		 ; 以下读取程序的起始部分（一个扇区）</span><br><span class="line">  </span><br><span class="line">   jmp LOADER_BASE_ADDR</span><br><span class="line">       </span><br><span class="line">;-------------------------------------------------------------------------------</span><br><span class="line">;功能:读取硬盘n个扇区</span><br><span class="line">rd_disk_m_16:	   </span><br><span class="line">;-------------------------------------------------------------------------------</span><br><span class="line">				       ; eax=LBA扇区号</span><br><span class="line">				       ; ebx=将数据写入的内存地址</span><br><span class="line">				       ; ecx=读入的扇区数</span><br><span class="line">      mov esi,eax	  ;备份eax</span><br><span class="line">      mov di,cx		  ;备份cx</span><br><span class="line">;读写硬盘:</span><br><span class="line">;第1步：设置要读取的扇区数</span><br><span class="line">      mov dx,0x1f2</span><br><span class="line">      mov al,cl</span><br><span class="line">      out dx,al            ;读取的扇区数</span><br><span class="line"></span><br><span class="line">      mov eax,esi	   ;恢复ax</span><br><span class="line"></span><br><span class="line">;第2步：将LBA地址存入0x1f3 ~ 0x1f6</span><br><span class="line"></span><br><span class="line">      ;LBA地址7~0位写入端口0x1f3</span><br><span class="line">      mov dx,0x1f3                       </span><br><span class="line">      out dx,al                          </span><br><span class="line"></span><br><span class="line">      ;LBA地址15~8位写入端口0x1f4</span><br><span class="line">      mov cl,8</span><br><span class="line">      shr eax,cl</span><br><span class="line">      mov dx,0x1f4</span><br><span class="line">      out dx,al</span><br><span class="line"></span><br><span class="line">      ;LBA地址23~16位写入端口0x1f5</span><br><span class="line">      shr eax,cl</span><br><span class="line">      mov dx,0x1f5</span><br><span class="line">      out dx,al</span><br><span class="line"></span><br><span class="line">      shr eax,cl</span><br><span class="line">      and al,0x0f	   ;lba第24~27位</span><br><span class="line">      or al,0xe0	   ; 设置7～4位为1110,表示lba模式</span><br><span class="line">      mov dx,0x1f6</span><br><span class="line">      out dx,al</span><br><span class="line"></span><br><span class="line">;第3步：向0x1f7端口写入读命令，0x20 </span><br><span class="line">      mov dx,0x1f7</span><br><span class="line">      mov al,0x20                        </span><br><span class="line">      out dx,al</span><br><span class="line"></span><br><span class="line">;第4步：检测硬盘状态</span><br><span class="line">  .not_ready:</span><br><span class="line">      ;同一端口，写时表示写入命令字，读时表示读入硬盘状态</span><br><span class="line">      nop</span><br><span class="line">      in al,dx</span><br><span class="line">      and al,0x88	   ;第4位为1表示硬盘控制器已准备好数据传输，第7位为1表示硬盘忙</span><br><span class="line">      cmp al,0x08</span><br><span class="line">      jnz .not_ready	   ;若未准备好，继续等。</span><br><span class="line"></span><br><span class="line">;第5步：从0x1f0端口读数据</span><br><span class="line">      mov ax, di</span><br><span class="line">      mov dx, 256</span><br><span class="line">      mul dx</span><br><span class="line">      mov cx, ax	   ; di为要读取的扇区数，一个扇区有512字节，每次读入一个字，</span><br><span class="line">			   ; 共需di*512/2次，所以di*256</span><br><span class="line">      mov dx, 0x1f0</span><br><span class="line">  .go_on_read:</span><br><span class="line">      in ax,dx</span><br><span class="line">      mov [bx],ax</span><br><span class="line">      add bx,2		  </span><br><span class="line">      loop .go_on_read</span><br><span class="line">      ret</span><br><span class="line"></span><br><span class="line">   times 510-($-$$) db 0</span><br><span class="line">   db 0x55,0xaa</span><br></pre></td></tr></table></figure>
+
+<p><code>include/boot.inc</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">;-------------	 loader和kernel   ----------</span><br><span class="line"></span><br><span class="line">LOADER_BASE_ADDR equ 0x900 </span><br><span class="line">LOADER_START_SECTOR equ 0x2</span><br><span class="line"></span><br><span class="line">;--------------   gdt描述符属性  -------------</span><br><span class="line">DESC_G_4K   equ	  1_00000000000000000000000b   </span><br><span class="line">DESC_D_32   equ	   1_0000000000000000000000b</span><br><span class="line">DESC_L	    equ	    0_000000000000000000000b	;  64位代码标记，此处标记为0便可。</span><br><span class="line">DESC_AVL    equ	     0_00000000000000000000b	;  cpu不用此位，暂置为0  </span><br><span class="line">DESC_LIMIT_CODE2  equ 1111_0000000000000000b</span><br><span class="line">DESC_LIMIT_DATA2  equ DESC_LIMIT_CODE2</span><br><span class="line">DESC_LIMIT_VIDEO2  equ 0000_000000000000000b</span><br><span class="line">DESC_P	    equ		  1_000000000000000b</span><br><span class="line">DESC_DPL_0  equ		   00_0000000000000b</span><br><span class="line">DESC_DPL_1  equ		   01_0000000000000b</span><br><span class="line">DESC_DPL_2  equ		   10_0000000000000b</span><br><span class="line">DESC_DPL_3  equ		   11_0000000000000b</span><br><span class="line">DESC_S_CODE equ		     1_000000000000b</span><br><span class="line">DESC_S_DATA equ	  DESC_S_CODE</span><br><span class="line">DESC_S_sys  equ		     0_000000000000b</span><br><span class="line">DESC_TYPE_CODE  equ	      1000_00000000b	;x=1,c=0,r=0,a=0 代码段是可执行的,非依从的,不可读的,已访问位a清0.  </span><br><span class="line">DESC_TYPE_DATA  equ	      0010_00000000b	;x=0,e=0,w=1,a=0 数据段是不可执行的,向上扩展的,可写的,已访问位a清0.</span><br><span class="line"></span><br><span class="line">DESC_CODE_HIGH4 equ (0x00 &lt;&lt; 24) + DESC_G_4K + DESC_D_32 + DESC_L + DESC_AVL + DESC_LIMIT_CODE2 + DESC_P + DESC_DPL_0 + DESC_S_CODE + DESC_TYPE_CODE + 0x00</span><br><span class="line">DESC_DATA_HIGH4 equ (0x00 &lt;&lt; 24) + DESC_G_4K + DESC_D_32 + DESC_L + DESC_AVL + DESC_LIMIT_DATA2 + DESC_P + DESC_DPL_0 + DESC_S_DATA + DESC_TYPE_DATA + 0x00</span><br><span class="line">DESC_VIDEO_HIGH4 equ (0x00 &lt;&lt; 24) + DESC_G_4K + DESC_D_32 + DESC_L + DESC_AVL + DESC_LIMIT_VIDEO2 + DESC_P + DESC_DPL_0 + DESC_S_DATA + DESC_TYPE_DATA + 0x0b</span><br><span class="line"></span><br><span class="line">;--------------   选择子属性  ---------------</span><br><span class="line">RPL0  equ   00b</span><br><span class="line">RPL1  equ   01b</span><br><span class="line">RPL2  equ   10b</span><br><span class="line">RPL3  equ   11b</span><br><span class="line">TI_GDT	 equ   000b</span><br><span class="line">TI_LDT	 equ   100b</span><br></pre></td></tr></table></figure>
+
+<p><code>equ</code>是nasm的伪指令，即equal。符号名采用<code>DESC_字段名_字段相关信息</code>的形式，<code>DESC_G_4K</code>是4K粒度</p>
+<p><code>loader.S</code>是关键</p>
+<p><img src="/6.png" alt="6"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br></pre></td><td class="code"><pre><span class="line">   %include &quot;boot.inc&quot;</span><br><span class="line">   section loader vstart=LOADER_BASE_ADDR			;0x900</span><br><span class="line">   LOADER_STACK_TOP equ LOADER_BASE_ADDR			;LOADER_STACK_TOP是保护模式下的栈</span><br><span class="line">   jmp loader_start					; 此处的物理地址是:</span><br><span class="line">   ;使用dd指令deine double-word定义双字变量</span><br><span class="line">   ;程序编译后的地址从上到下越来越高，下面用dd定义的数据地址（段描述符的高4字节）要高于上面的（段描述符的低4字节）</span><br><span class="line">   ;即先定义低4字节，再定义高四字节</span><br><span class="line">;构建gdt及其内部的描述符--begin</span><br><span class="line">   GDT_BASE:   dd    0x00000000 		;GDT的起始地址</span><br><span class="line">	       dd    0x00000000				</span><br><span class="line"></span><br><span class="line">   CODE_DESC:  dd    0x0000FFFF 		;代码段描述符，0-15位是段界限FFFF，16-31是段基址0000</span><br><span class="line">	       dd    DESC_CODE_HIGH4		;高四字节定义麻烦，所以在boot.inc提前定义好，直接拿来用</span><br><span class="line"></span><br><span class="line">   DATA_STACK_DESC:  dd    0x0000FFFF	;数据段和栈段描述符</span><br><span class="line">		     dd    DESC_DATA_HIGH4		;为简单，直接用普通的数据段作栈段</span><br><span class="line"></span><br><span class="line">   VIDEO_DESC: dd    0x80000007	       ;limit=(0xbffff-0xb8000)/4k=0x7		;显存段描述符低4字节</span><br><span class="line">	       dd    DESC_VIDEO_HIGH4  ; 此时dpl已改为0</span><br><span class="line">;实模式下文本模式显示适配器的内存地址0xb8000-0xbffff, 0xc0000是显示适配器BIOS所在区域</span><br><span class="line">;为方便，把段基址设为文本模式的起始地址0xb8000段大小0x7fff=0xbffff-0xb8000,段粒度4K，所以段界限=7</span><br><span class="line">;--end.构建全局描述符表，并在里面填充段描述符</span><br><span class="line">   GDT_SIZE   equ   $ - GDT_BASE</span><br><span class="line">   GDT_LIMIT   equ   GDT_SIZE -	1 </span><br><span class="line">;通过地址差获得GDT大小，使用GDT大小-1获得段界限，为加载GDT作准备</span><br><span class="line">   times 60 dq 0					 ; 此处预留60个描述符的slot，为将来往GDT添加其他描述符，提前保留空间</span><br><span class="line">;dq是define quad-word，定义4 word即8字节，times是nasm的伪指令，循环</span><br><span class="line">   SELECTOR_CODE equ (0x0001&lt;&lt;3) + TI_GDT + RPL0         ; 相当于(CODE_DESC - GDT_BASE)/8 + TI_GDT + RPL0</span><br><span class="line">   SELECTOR_DATA equ (0x0002&lt;&lt;3) + TI_GDT + RPL0	 ; 同上</span><br><span class="line">   SELECTOR_VIDEO equ (0x0003&lt;&lt;3) + TI_GDT + RPL0	 ; 同上 </span><br><span class="line"></span><br><span class="line">   ;以下是定义gdt的指针，前2字节是gdt界限，后4字节是gdt起始地址</span><br><span class="line"></span><br><span class="line">   gdt_ptr  dw  GDT_LIMIT </span><br><span class="line">	    	dd  GDT_BASE		;定义全局描述符表GDT的指针，此指针是lgdt加载GDT到gdtr寄存器时用的，48位</span><br><span class="line">   loadermsg db &#x27;2 loader in real.&#x27;		;定义字符串，显示一下要进入保护模式了</span><br><span class="line"></span><br><span class="line">   loader_start:</span><br><span class="line"></span><br><span class="line">;------------------------------------------------------------</span><br><span class="line">;INT 0x10    功能号:0x13    功能描述:打印字符串</span><br><span class="line">;------------------------------------------------------------</span><br><span class="line">;输入:</span><br><span class="line">;AH 子功能号=13H</span><br><span class="line">;BH = 页码</span><br><span class="line">;BL = 属性(若AL=00H或01H)</span><br><span class="line">;CX＝字符串长度</span><br><span class="line">;(DH、DL)＝坐标(行、列)</span><br><span class="line">;ES:BP＝字符串地址 </span><br><span class="line">;AL＝显示输出方式</span><br><span class="line">;   0——字符串中只含显示字符，其显示属性在BL中。显示后，光标位置不变</span><br><span class="line">;   1——字符串中只含显示字符，其显示属性在BL中。显示后，光标位置改变</span><br><span class="line">;   2——字符串中含显示字符和显示属性。显示后，光标位置不变</span><br><span class="line">;   3——字符串中含显示字符和显示属性。显示后，光标位置改变</span><br><span class="line">;无返回值</span><br><span class="line">   mov	 sp, LOADER_BASE_ADDR</span><br><span class="line">   mov	 bp, loadermsg           ; ES:BP = 字符串地址</span><br><span class="line">   mov	 cx, 17			 ; CX = 字符串长度</span><br><span class="line">   mov	 ax, 0x1301		 ; AH = 13,  AL = 01h</span><br><span class="line">   mov	 bx, 0x001f		 ; 页号为0(BH = 0) 蓝底粉红字(BL = 1fh)</span><br><span class="line">   mov	 dx, 0x1800		 ;</span><br><span class="line">   int	 0x10                    ; 10h 号中断</span><br><span class="line"></span><br><span class="line">;----------------------------------------   准备进入保护模式   ------------------------------------------</span><br><span class="line">									;1 打开A20</span><br><span class="line">									;2 加载gdt</span><br><span class="line">									;3 将cr0的pe位置1，表示为保护模式；0位实模式</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">   ;-----------------  打开A20  ----------------</span><br><span class="line">   in al,0x92</span><br><span class="line">   or al,0000_0010B</span><br><span class="line">   out 0x92,al</span><br><span class="line"></span><br><span class="line">   ;-----------------  加载GDT  ----------------</span><br><span class="line">   lgdt [gdt_ptr]		;gdt_ptr是GDT地址指针变量，前16位是GDT界限值，后32位是GDT起始地址，</span><br><span class="line">						;gdt_ptr本身是个地址，使用[]表示在该地址处取值</span><br><span class="line"></span><br><span class="line">   ;-----------------  cr0第0位置1  ----------------</span><br><span class="line">   mov eax, cr0</span><br><span class="line">   or eax, 0x00000001</span><br><span class="line">   mov cr0, eax</span><br><span class="line"></span><br><span class="line">   ;jmp dword SELECTOR_CODE:p_mode_start	     ; 刷新流水线，避免分支预测的影响,这种cpu优化策略，最怕jmp跳转，无条件跳转指令</span><br><span class="line">   jmp  SELECTOR_CODE:p_mode_start	     ; 刷新流水线，避免分支预测的影响,这种cpu优化策略，最怕jmp跳转，</span><br><span class="line">					     ; 这将导致之前做的预测失效，从而起到了刷新的作用。</span><br><span class="line"></span><br><span class="line">[bits 32]</span><br><span class="line">p_mode_start:</span><br><span class="line">   mov ax, SELECTOR_DATA</span><br><span class="line">   mov ds, ax</span><br><span class="line">   mov es, ax</span><br><span class="line">   mov ss, ax</span><br><span class="line">   mov esp,LOADER_STACK_TOP</span><br><span class="line">   mov ax, SELECTOR_VIDEO</span><br><span class="line">   mov gs, ax					;用选择子初始化成各段寄存器</span><br><span class="line"></span><br><span class="line">   mov byte [gs:160], &#x27;P&#x27;		;传入P字</span><br><span class="line"></span><br><span class="line">   jmp $</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>在bochs中，控制寄存器和状态寄存器的相应位为1，bochs会用大写，0对应小写</p>
+</blockquote>
+<p>文件相关：</p>
+<ul>
+<li><p>创建文件： <code>touch a.txt</code></p>
+</li>
+<li><p>创建文件夹： <code>mkdir</code> <code>NewFolder</code></p>
+</li>
+<li><p>删除文件： <code>rm</code> <code>a.txt</code></p>
+</li>
+<li><p>删除文件夹： <code>rmdir</code> <code>NewFolder</code></p>
+</li>
+<li><p>删除带有文件的文件夹： <code>rm -r NewFolder</code></p>
+</li>
+</ul>
+<p>编译：</p>
+<p><code>nasm -I include/ -o mbr.bin mbr.S</code></p>
+<p><code>nasm -I include/ -o loader.bin loader.S</code></p>
+<p>写入硬盘</p>
+<p><code>dd if=/root/bochs-2.7/mbr.bin of=/root/bochs-2.7/hd60M.img bs=512 count=1 conv=notrunc</code></p>
+<p><code>dd if=/root/bochs-2.7/loader.bin of=/root/bochs-2.7/hd60M.img bs=512 count=4 seek=2 conv=notrunc</code></p>
+<blockquote>
+<p>!!! count&#x3D;4 不是 1</p>
+<p>感谢博主：<a target="_blank" rel="noopener" href="https://www.kn0sky.com/?p=43">操作系统真象还原 学习笔记04–保护模式入门</a></p>
+</blockquote>
+<p>在书中会显示一些细节信息：<code>creg</code>，<code>info gdt</code>等，而bochs一直在循环过程中，要想结束循环，键盘<code>Ctrl+c</code>可中止程序进行查看详细信息。</p>
+<h3 id="处理器微架构"><a href="#处理器微架构" class="headerlink" title="处理器微架构"></a>处理器微架构</h3><h4 id="流水线"><a href="#流水线" class="headerlink" title="流水线"></a>流水线</h4><p>指令执行单元EU是执行指令的唯一部件，一次只能执行一个指令，在单核CPU的情况下，只有一个指令处于执行中。</p>
+<p>CPU的指令执行过程分为取指令、译码、执行三个步骤，每个步骤都是独立的，CPU是按照程序中指令顺序来填充流水线的，也就是按照PC寄存器里的值来装载流水线，如果有jmp指令，后面的就没有用了，所以CPU在遇到无条件的转移指令jmp时会清空流水线。</p>
+<h4 id="乱序执行"><a href="#乱序执行" class="headerlink" title="乱序执行"></a>乱序执行</h4><p>指CPU运行的指令并不按照代码中的顺序执行，而是按照一定的策略打乱，也许后面的指令先执行，得保证指令之间不具备相关性。</p>
+<p>X86最初使用CISC指令集（complex instruction set computer）复杂指令集计算机，与之相对的是RISC（reduced…)精简指令集计算机</p>
+<h4 id="缓存"><a href="#缓存" class="headerlink" title="缓存"></a>缓存</h4><p>CPU中的L1、L2、L3级缓存，都被称为SRAM，静态随机访问存储器。</p>
+<p>为程序的局部性采取缓存原理：时间局部性（最近访问过的指令和数据）、空间局部性（靠近当前访问内存空间的内存地址）。</p>
+<p>对于无条件跳转，没有什么，所谓的预测是针对有条件的跳转，最简单的统计是根据上一次跳转的结果来预测本次；最简单的方法是2位预测法，用2位bit的计数器来记录跳转状态，每跳转一次加1，直到3就不加了，如果未跳转减1，减到0停止，如果计数器大于1则跳转，小于等于1不跳。</p>
+<p>静态预测器策略：向上跳转则转移会发生，向下跳转则转移不发生。</p>
+<p>如果分支预测错误，只要清空流水线就行，只是代价较大</p>
+<h4 id="使用远跳转指令清空流水线"><a href="#使用远跳转指令清空流水线" class="headerlink" title="使用远跳转指令清空流水线"></a>使用远跳转指令清空流水线</h4><p>上述代码中的无条件跳转指令</p>
+<p><code>jmp dword SELECTOR_CODE:p_mode_start</code></p>
+<h5 id="为什么要用jmp远转移"><a href="#为什么要用jmp远转移" class="headerlink" title="为什么要用jmp远转移"></a>为什么要用jmp远转移</h5><ol>
+<li>段描述符缓冲寄存器未更新，之前还是实模式下的值，进入保护模式后要填入正确的信息</li>
+<li>流水线中指令译码错误</li>
+</ol>
+<h3 id="内存段的保护"><a href="#内存段的保护" class="headerlink" title="内存段的保护"></a>内存段的保护</h3><p>段描述符的属性字段中，每个字段都不是多余的，这些属性是用来描述一块内存的性质，给CPU参考，当有实际动作在这片内存上发生时，CPU用这些属性检查动作的合法性</p>
+<h5 id="向段寄存器加载选择子时的保护"><a href="#向段寄存器加载选择子时的保护" class="headerlink" title="向段寄存器加载选择子时的保护"></a>向段寄存器加载选择子时的保护</h5><ul>
+<li>首先验证段描述符是否超过界限：描述符表基地址+选择子的索引值*8+7 &lt;&#x3D; 描述符表基地址+描述符表界限值</li>
+<li>检查段寄存器的用途与段类型是否匹配</li>
+<li>检查内存段是否存在，P位为1则存在，若为0说明转储到硬盘上了，这时会抛出异常，等加载到内存中，P变为1</li>
+</ul>
+<p><img src="/7.png" alt="7"></p>
+<p><img src="/8.png" alt="8"></p>
+<h5 id="代码段和数据段的保护"><a href="#代码段和数据段的保护" class="headerlink" title="代码段和数据段的保护"></a>代码段和数据段的保护</h5><p>CPU每访问一个地址，都要确认该地址不能超过内存段范围，实际的段界限值：（描述符中段界限+1）*（段界限粒度：4K或1）-1</p>
+<p>对于代码段，段中的数据是各种指令，使用CS：EIP访问指令的起始地址，满足：EIP中的偏移地址+指令长度-1 &lt;&#x3D; 实际段界限大小</p>
+<h5 id="栈段的保护"><a href="#栈段的保护" class="headerlink" title="栈段的保护"></a>栈段的保护</h5><p>将段界限地址+1视为栈可以访问的下限</p>
+<p><img src="/9.png" alt="9"></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9C%9F%E7%9B%B8%E8%BF%98%E5%8E%9F/" rel="tag"># 操作系统真相还原</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/10/21/MVCC%E5%8F%AF%E9%87%8D%E5%A4%8D%E8%AF%BB/" rel="prev" title="MVCC可重复读">
+      <i class="fa fa-chevron-left"></i> MVCC可重复读
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/10/22/bochs%E8%B0%83%E8%AF%95/" rel="next" title="bochs调试">
+      bochs调试 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E5%85%A5%E4%BF%9D%E6%8A%A4%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.</span> <span class="nav-text">进入保护模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%84%E7%90%86%E5%99%A8%E5%BE%AE%E6%9E%B6%E6%9E%84"><span class="nav-number">2.</span> <span class="nav-text">处理器微架构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B5%81%E6%B0%B4%E7%BA%BF"><span class="nav-number">2.1.</span> <span class="nav-text">流水线</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B9%B1%E5%BA%8F%E6%89%A7%E8%A1%8C"><span class="nav-number">2.2.</span> <span class="nav-text">乱序执行</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BC%93%E5%AD%98"><span class="nav-number">2.3.</span> <span class="nav-text">缓存</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E8%BF%9C%E8%B7%B3%E8%BD%AC%E6%8C%87%E4%BB%A4%E6%B8%85%E7%A9%BA%E6%B5%81%E6%B0%B4%E7%BA%BF"><span class="nav-number">2.4.</span> <span class="nav-text">使用远跳转指令清空流水线</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E7%94%A8jmp%E8%BF%9C%E8%BD%AC%E7%A7%BB"><span class="nav-number">2.4.1.</span> <span class="nav-text">为什么要用jmp远转移</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%85%E5%AD%98%E6%AE%B5%E7%9A%84%E4%BF%9D%E6%8A%A4"><span class="nav-number">3.</span> <span class="nav-text">内存段的保护</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%90%91%E6%AE%B5%E5%AF%84%E5%AD%98%E5%99%A8%E5%8A%A0%E8%BD%BD%E9%80%89%E6%8B%A9%E5%AD%90%E6%97%B6%E7%9A%84%E4%BF%9D%E6%8A%A4"><span class="nav-number">3.0.1.</span> <span class="nav-text">向段寄存器加载选择子时的保护</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E6%AE%B5%E5%92%8C%E6%95%B0%E6%8D%AE%E6%AE%B5%E7%9A%84%E4%BF%9D%E6%8A%A4"><span class="nav-number">3.0.2.</span> <span class="nav-text">代码段和数据段的保护</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%A0%88%E6%AE%B5%E7%9A%84%E4%BF%9D%E6%8A%A4"><span class="nav-number">3.0.3.</span> <span class="nav-text">栈段的保护</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Kevin Wang</p>
+  <div class="site-description" itemprop="description">记录生活</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">52</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Kevin Wang</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>
